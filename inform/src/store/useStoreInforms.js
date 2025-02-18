@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchInformes, addInforme, updateInforme, deleteInforme } from "../services/Api";
+import { fetchInforms, searchInforms, addInform,  deleteInform, updateInform} from "../services/Api";
 
 export const useStoreInformes = () => {
   const [informes, setInformes] = useState([]);
@@ -9,10 +9,8 @@ export const useStoreInformes = () => {
   const AllInformes = async () => {
     setLoading(true);
     try {
-      const data = await fetchInformes();
+      const data = await fetchInforms();
       setInformes(data);
-      console.log(data);
-      
     } catch (error) {
       console.error("Error al obtener informes", error);
     } finally {
@@ -20,10 +18,20 @@ export const useStoreInformes = () => {
     }
   };
 
-  // Agregar informe (POST)
-  const addNewInforme = async (nuevoInforme) => {
+  // Obtener informes busqueda(GET)
+  const fetchInformesSearch = async (searchQuery) => {
     try {
-      await addInforme(nuevoInforme); 
+      const data = await searchInforms(searchQuery); 
+      setInformes(data); 
+    } catch (error) {
+      console.error("Error al obtener los informes de búsqueda:", error);
+    }
+  };
+
+  // Agregar informe (POST)
+  const addNewInforme = async (newInform) => {
+    try {
+      await addInform(newInform); 
       await AllInformes(); // Hacer un nuevo GET para actualizar la lista
     } catch (error) {
       console.error("Error al agregar informe", error);
@@ -31,12 +39,10 @@ export const useStoreInformes = () => {
   };
 
   // Editar informe (PUT)
-  const updateExistingInforme = async (id, datosActualizados) => {
+  const updateExistingInforme = async (id, dataUpdate) => {
     try {
-      const updatedInforme = await updateInforme(id, datosActualizados);
-      setInformes((prevInformes) =>
-        prevInformes.map((informe) => (informe.id === id ? updatedInforme : informe))
-      );
+       await updateInform(id, dataUpdate);
+       await AllInformes()
     } catch (error) {
       console.error("Error al actualizar informe", error);
     }
@@ -45,7 +51,7 @@ export const useStoreInformes = () => {
   // Eliminar informe (DELETE)
   const deleteExistingInforme = async (id) => {
     try {
-      await deleteInforme(id);
+      await deleteInform(id);
       await AllInformes();
     } catch (error) {
       console.error("Error al eliminar informe", error);
@@ -64,5 +70,6 @@ export const useStoreInformes = () => {
     addNewInforme,
     updateExistingInforme,
     deleteExistingInforme,
+    fetchInformesSearch
   };
 };

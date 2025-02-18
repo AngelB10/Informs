@@ -1,16 +1,28 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "react-bootstrap";
 import DataTable from "../components/table";
 import ModalForm from "../components/Form";
-import { useStoreInformes } from "../store/useStoreInformes";
+import { useStoreInformes } from "../store/useStoreInforms";
+import { useStoreLeaders } from "../store/useStoreLeader";
+import { sweetDelete } from "../services/notify"; 
 
 const Inform = () => {
   const [show, setShow] = useState(false);
-  const {informes, addNewInforme, deleteExistingInforme, updateExistingInforme } = useStoreInformes();
+  const { informes, addNewInforme, deleteExistingInforme, updateExistingInforme, fetchInformesSearch } = useStoreInformes();
+  const { leaders } = useStoreLeaders();
   const [rows, setRows] = useState([]); // Inicializar rows vacío
-  const [dataInform, setDataInform] = useState()
-  const [actionType, setActionType] = useState()
+  const [dataInform, setDataInform] = useState();
+  const [actionType, setActionType] = useState();
+  const [idEdit, setIdEdit] = useState();
+  const [typeFunc, setTypeFunc] = useState();
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
+
+  // Maneja el cambio del input de búsqueda
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value); 
+    fetchInformesSearch(e.target.value); 
+  };
 
   useEffect(() => {
     const formattedRows = informes.map((informe) => ({
@@ -18,81 +30,92 @@ const Inform = () => {
       date: informe.date ? informe.date.split("T")[0] : "",
     }));
     setRows(formattedRows);
+    console.log(formattedRows);
+    
   }, [informes]);
 
+  const handleShow = () => setShow(true);
 
- const handleShow = () => setShow(true);
+  const deleteClient = async (data) => {
+    const itemId = data._id;
+    const textDele = "el informe de esta fecha";
+    const dataName = data.date;
 
-  
- const deleteClient = (client) => {
-  deleteExistingInforme(client._id)
-};
+    sweetDelete(textDele, dataName, async () => {
+      try {
+        await deleteExistingInforme(itemId);
+      } catch (error) {
+        console.error("Error al eliminar el informe:", error);
+      }
+    });
+  };
 
-const goInfo = (client) => {
-  setDataInform(client)
-  setActionType(updateExistingInforme)
-  handleShow()
-};
+  const goInfo = (client) => {
+    console.log(client);
+    
+    setTypeFunc(2);
+    setDataInform(client);
+    setIdEdit(client._id);
+    setActionType(() => updateExistingInforme); 
+    handleShow();
+  };
 
-const createInform = () => {
-  setActionType(addNewInforme)
-  handleShow()
-}
+  const createInform = () => {
+    setTypeFunc(1);
+    setDataInform(null);
+    setActionType(() => addNewInforme); 
+    handleShow();
+  };
 
+  const showProductClient = (client) => {
+    const val = client;
+    val;
+  };
 
-const showProductClient = (client) => {
-  console.log("Ver productos de:", client);
-};
-
+  const optionsTwelveLeaders = leaders.filter((leader) => leader.mainLeader).map((leader) => ({
+    value: leader._id,
+    name: leader.name,
+  }));
 
   const columns = [
     { name: "theme", label: "TEMA"},
-    { name: "mainLeader", label: "LIDER DE 12", },
-    { name: "leader", label: "LIDER DE CELULA"},
-    { name: "numberAttendees", label: "CANTIDAD"},
-    { name: "date", label: "FECHA"},
-    { name: "offering", label: "OFRENDA",},
-
+    { name: "mainLeader", label: "LIDER DE 12" },
+    { name: "leader", label: "LIDER DE CELULA" },
+    { name: "numberAttendees", label: "CANTIDAD" },
+    { name: "date", label: "FECHA" },
+    { name: "offering", label: "OFRENDA" },
   ];
 
-
-  const visibleColumns = ["theme","mainLeader","leader","numberAttendees","date","offering"];
-
-  const leaderOptions = [
-    { value: "leader1", label: "Líder 1" },
-    { value: "leader2", label: "Líder 2" },
-    { value: "leader3", label: "Líder 3" }
-  ];
+  const visibleColumns = ["theme", "mainLeader", "leader", "numberAttendees", "date", "offering"];
 
   const fields = [
     { name: "theme", label: "Tema", type: "text", placeholder: "Escribe el tema", defaultValue: "" },
-    { name: "mainLeader", label: "Lider de 12", type: "select", options: leaderOptions, placeholder: "Escoge el nombre del lider principal", defaultValue: "" },
-    { name: "leader", label: "Lider", type: "select", options: leaderOptions, placeholder: "Escoge el nombre del lider de celula", defaultValue: "" },
-    { name: "numberAttendees", label: "Cantidad de asistentes", type: "text", placeholder: "Cantidad de asistentes", defaultValue: "" },
-    { name: "date", label: "Fecha", type: "date",  defaultValue: "", addProduct: true },
-    { name: "offering", label: "Ofrenda", type: "number", placeholder: "Escribe la cantidad de ofrenda", defaultValue: "" },
-
+    { name: "mainLeader", label: "Lider de 12", type: "select", options: optionsTwelveLeaders, placeholder: "Escoge el nombre", defaultValue: "" },
+    { name: "leader", label: "Lider", type: "select", options: leaders, placeholder: "Escoge el nombre", defaultValue: "" },
+    { name: "numberAttendees", label: "Cantidad de asistentes", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
+    { name: "date", label: "Fecha", type: "date", defaultValue: "", addProduct: true },
+    { name: "offering", label: "Ofrenda", type: "number", placeholder: "Escribe la cantidad", defaultValue: "" },
   ];
 
   return (
     <div>
-      <h1 className="text-white">Informes</h1>
-      <hr className="text-white" />
-
-      <div className="d-flex justify-content-between align-items-center mt-30">
+      <h3 className="text-black">Informes</h3>
+      <p>Pagina para agregar y eliminar informes</p>
+      <div className="d-flex justify-content-between mt-9">
         <input
           type="text"
           placeholder="Buscar..."
-          className="form-control w-50"
+          className="w-[40%] border-[1px] border-[#cbcbcb] rounded-[6px] p-2"
+          value={searchQuery}
+          onChange={handleSearchChange} // Llama a la función de búsqueda
         />
 
         <Button
-          variant="success"
-          className="d-flex align-items-center w-30"
+          className="d-flex align-items-center w-30 bg-blue-500"
           onClick={createInform} // Abre el modal
         >
-          <Plus size={20} className="me-2" />
-          Agregar
+          <Plus size={20} className="me-2 text-blue-950" />
+          <strong className="text-blue-950">Agregar</strong> 
         </Button>
       </div>
 
@@ -109,7 +132,7 @@ const showProductClient = (client) => {
       </div>
 
       {/* Modal con formulario */}
-      <ModalForm show={show}  handleClose={() => setShow(false)} fields={fields}  onSubmit={actionType} initialData={dataInform} />
+      <ModalForm show={show} handleClose={() => setShow(false)} fields={fields} id={idEdit} creaEdit={typeFunc} onSubmit={actionType} initialData={dataInform} />
     </div>
   );
 };

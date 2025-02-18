@@ -8,9 +8,9 @@ import Statistics from "./pages/Statistics"
 
 function App() {
   return (
-    <div className="h-screen bg-[#000000] "> 
-      <MyNavbar className="h-30" />
-      <div className="flex-1 px-[10%] mt-22 "> 
+    <div className="h-screen bg-[#fefcfc] "> 
+      <MyNavbar className="h-8" />
+      <div className="px-[5%] mt-8 w-[80%]"> 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Leaders" element={<Leaders />} /> 

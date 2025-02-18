@@ -2,7 +2,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types"; 
 import { useState, useEffect } from "react";
 
-const ModalForm = ({ show, handleClose, fields, onSubmit, initialData }) => {
+const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaEdit }) => {
   const [formData, setFormData] = useState({});
 
   const [errors, setErrors] = useState({});
@@ -40,8 +40,13 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData }) => {
       setErrors(newErrors);
       return;
     }
-
-    onSubmit(formData); 
+    if (creaEdit == true) {
+      onSubmit(formData);
+    }
+    else{
+     onSubmit(id, formData); 
+    }
+    
     handleClose(); 
   };
 
@@ -50,29 +55,29 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData }) => {
       <Modal.Header closeButton className="bg-dark px-5 text-white">
         <Modal.Title>{initialData ? "EDITAR INFORME" : "CREAR INFORME"}</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-dark px-5 text-white">
+      <Modal.Body className="bg-white px-5 text-black">
         <Form>
           {fields.map((field) => (
             <Form.Group key={field.name}>
-              <Form.Label>{field.label}</Form.Label>
+              <Form.Label className="mb-0">{field.label}</Form.Label>
 
               {field.type === "select" ? (
                 <Form.Select
-                  className="bg-white"
+                  className="bg-white mb-4"
                   name={field.name}
                   value={formData[field.name] || ""}
                   onChange={handleChange}
                 >
                   <option value="">{field.placeholder}</option>
                   {field.options?.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                    <option key={option.value} value={option.name}>
+                      {option.name}
                     </option>
                   ))}
                 </Form.Select>
               ) : (
                 <Form.Control
-                  className="bg-white"
+                  className="bg-white mb-4"
                   type={field.type}
                   name={field.name}
                   placeholder={field.placeholder}
@@ -101,6 +106,8 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData }) => {
 ModalForm.propTypes = {
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired, 
+  creaEdit: PropTypes.bool.isRequired,
   fields: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,

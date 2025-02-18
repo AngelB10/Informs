@@ -2,61 +2,52 @@ import PropTypes from "prop-types";
 
 const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInfo }) => {
   return (
-    <div className=" mt-20">
-      <div className="flex justify-between items-center mb-2 ">
-        <h6 className="text-xl font-semibold text-white ">{nameTable}</h6>
+    <div className=" mt-10">
+      <div className="flex justify-between items-center">
+        <h6 >{nameTable}</h6>
       </div>
-
-      <div className="pb-8 pt-2  rounded-[10px]">
-      <table className="w-full text-left border-collapse rounded-lg shadow-md bg-white">
-  <thead className="bg-gray-200 hover:bg-gray-300 border-b">
-    <tr>
-      {columns.map((col) => (
-        <th key={col.key} className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">
-          {col.label}
-        </th>
-      ))}
-      <th className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">Acciones</th>
-    </tr>    
-  </thead>
-  <tbody>
-    {rows.map((row, index) => (
-      <tr key={index} className="hover:bg-gray-100 transition border-b last:border-none">
-        {visibleColumns.map((colKey) => (
-          <td key={colKey} className="px-4 py-3 text-gray-700 truncate max-w-[150px]" title={row[colKey]}>
-            {typeof row[colKey] === "string" && row[colKey].length > 30 
-              ? row[colKey].slice(0, 30) + "..." 
-              : row[colKey]
-            }
-          </td>
+      <div className="overflow-y-auto max-h-[500px] pb-8 pt-2  rounded-[10px]">
+  <table className="w-full border-collapse rounded-lg shadow-md bg-white">
+    <thead className="bg-gray-100 hover:bg-gray-300 border-b">
+      <tr>
+        {columns.map((col) => (
+          <th key={col.key} className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">
+            {col.label}
+          </th>
         ))}
-        <td className=" py-2 flex gap-2">
-          <button 
-            className="text-[#9a1b1b] px-3 py-1 bg-[#d65757] hover:bg-red-500 "
-            onClick={() => onDelete(row)}
-          >
-            Eliminar
-          </button>
-          <button 
-            className="bg-[#4463d2] hover:bg-blue-500 text-[#1837a5] px-3 py-1 "
-            onClick={() => onGoInfo(row)}
-          >
-            Editar
-          </button>
-          {/* <button 
-            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 "
-            onClick={() => onProductClients(row)}
-          >
-            Productos
-          </button> */}
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+        <th className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">Acciones</th>
+      </tr>    
+    </thead>
+    <tbody>
+      {rows.map((row, index) => ( 
+        <tr key={index} className="hover:bg-gray-100 transition border-b last:border-none">
+          {visibleColumns.map((colKey) => (
+            <td key={colKey} className="px-2 py-2 text-gray-700 truncate">
+              <div className={`${colKey === "mainLeader" || colKey === "date" ? "bg-green-300 text-[#09b717] rounded-[4px] text-center max-w-[138px]" : "bg-transparent"} px-2 py-2`}>
+                {typeof row[colKey] === "string" && row[colKey].length > 30 ? row[colKey].slice(0, 30) + "..." : row[colKey]}
+              </div>
+            </td>
+          ))}
+          <td className="py-[2px] gap-[2px]">
+            <button 
+              className="text-[#9a1b1b] bg-[#d65757] hover:bg-red-500 w-20 p-1 m-3"
+              onClick={() => onDelete(row)}
+            >
+              Eliminar
+            </button>
+            <button 
+              className="bg-[#4463d2] hover:bg-blue-500 text-[#1837a5] w-20 py-1 m-3"
+              onClick={() => onGoInfo(row)}
+            >
+              Editar
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
-
-      </div>
     </div>
   );
 };
