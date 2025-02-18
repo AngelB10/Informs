@@ -51,19 +51,18 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
   };
 
   return (
-    <Modal show={show} onHide={handleClose} className="mt-28">
-      <Modal.Header closeButton className="bg-dark px-5 text-white">
-        <Modal.Title>{initialData ? "EDITAR INFORME" : "CREAR INFORME"}</Modal.Title>
+    <Modal show={show} onHide={handleClose} className="pt-10">
+      <Modal.Header closeButton className="bg-dark px-3 text-white w-100 ">
+        <Modal.Title className="!text-[18px]">{initialData ? "EDITAR INFORME" : "CREAR INFORME"}</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-white px-5 text-black">
+      <Modal.Body className="bg-white px-4 text-black max-h-[400px] overflow-y-auto">
         <Form>
           {fields.map((field) => (
             <Form.Group key={field.name}>
-              <Form.Label className="mb-0">{field.label}</Form.Label>
-
+              <Form.Label className="mb-0 font-thin">{field.label}</Form.Label>
               {field.type === "select" ? (
                 <Form.Select
-                  className="bg-white mb-4"
+                  className="bg-white mb-3 h-10"
                   name={field.name}
                   value={formData[field.name] || ""}
                   onChange={handleChange}
@@ -77,7 +76,7 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
                 </Form.Select>
               ) : (
                 <Form.Control
-                  className="bg-white mb-4"
+                  className="bg-white mb-3 h-10"
                   type={field.type}
                   name={field.name}
                   placeholder={field.placeholder}

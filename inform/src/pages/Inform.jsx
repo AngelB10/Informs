@@ -84,15 +84,17 @@ const Inform = () => {
     { name: "numberAttendees", label: "CANTIDAD" },
     { name: "date", label: "FECHA" },
     { name: "offering", label: "OFRENDA" },
+    { name: "newAttendees", label: "Nuevos" },
   ];
 
-  const visibleColumns = ["theme", "mainLeader", "leader", "numberAttendees", "date", "offering"];
+  const visibleColumns = ["theme", "mainLeader", "leader", "numberAttendees", "date", "offering", "newAttendees"];
 
   const fields = [
     { name: "theme", label: "Tema", type: "text", placeholder: "Escribe el tema", defaultValue: "" },
     { name: "mainLeader", label: "Lider de 12", type: "select", options: optionsTwelveLeaders, placeholder: "Escoge el nombre", defaultValue: "" },
     { name: "leader", label: "Lider", type: "select", options: leaders, placeholder: "Escoge el nombre", defaultValue: "" },
     { name: "numberAttendees", label: "Cantidad de asistentes", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
+    { name: "newAttendees", label: "Cantidad de nuevos", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
     { name: "date", label: "Fecha", type: "date", defaultValue: "", addProduct: true },
     { name: "offering", label: "Ofrenda", type: "number", placeholder: "Escribe la cantidad", defaultValue: "" },
   ];

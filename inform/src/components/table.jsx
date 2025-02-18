@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Trash, Edit} from "lucide-react";
 
 const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInfo }) => {
   return (
@@ -7,11 +8,11 @@ const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInf
         <h6 >{nameTable}</h6>
       </div>
       <div className="overflow-y-auto max-h-[500px] pb-8 pt-2  rounded-[10px]">
-  <table className="w-full border-collapse rounded-lg shadow-md bg-white">
-    <thead className="bg-gray-100 hover:bg-gray-300 border-b">
+  <table className="w-full border-collapse rounded-lg shadow-md bg-white text-center">
+    <thead className="bg-gray-100 hover:bg-gray-300 border-b ">
       <tr>
         {columns.map((col) => (
-          <th key={col.key} className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">
+          <th key={col.key} className="px-4 py-3 text-gray-600 font-semibold uppercase text-[13px]">
             {col.label}
           </th>
         ))}
@@ -28,18 +29,18 @@ const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInf
               </div>
             </td>
           ))}
-          <td className="py-[2px] gap-[2px]">
+          <td>
             <button 
-              className="text-[#9a1b1b] bg-[#d65757] hover:bg-red-500 w-20 p-1 m-3"
+              className="text-[#9a1b1b] bg-[#d65757] hover:bg-red-500 m-2 "
               onClick={() => onDelete(row)}
             >
-              Eliminar
+              <Trash size={18} /> 
             </button>
             <button 
-              className="bg-[#4463d2] hover:bg-blue-500 text-[#1837a5] w-20 py-1 m-3"
+              className="bg-[#4463d2] hover:bg-blue-500 text-[#1837a5] m-2 "
               onClick={() => onGoInfo(row)}
             >
-              Editar
+               <Edit size={18} /> 
             </button>
           </td>
         </tr>
