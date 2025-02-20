@@ -25,10 +25,16 @@ const Leaders = () => {
   };
 
   useEffect(() => {
-    const formattedRows = leaders.map((leader) => ({
-      ...leader,  
-      mainLeader: leader.mainLeader ? "Líder de 12" : "Líder de 144",
-    }));
+    const formattedRows = leaders.map((leader) => {
+      let mainLeaderName = leader.idMainLeader === "Pastor" ? "Pastor" : leaders.find((l) => l._id === leader.idMainLeader)?.name || "No encontrado";
+  
+      return {
+        ...leader,
+        mainLeader: leader.mainLeader ? "Líder de 12" : "Líder de 144",
+        idMainLeader: mainLeaderName, 
+      };
+    });
+  
     setRows(formattedRows);
   }, [leaders]);
 
@@ -53,10 +59,23 @@ const deleteClient = async (data) => {
 
 const goInfo = (client) => {
   setTypeFunc(2)
-  setDataLeader(client);
+  getNameById(client)
+  
   setIdEdit(client._id)
   setActionType(() => updateExistingLeader); 
-  handleShow();
+  ;
+};
+
+const getNameById = (data) => {
+  const leader = leaders.find((leader) => leader._id === data.idMainLeader);
+
+  if (leader) {
+    data.idMainLeader = leader.name; 
+    setDataLeader(data);
+    handleShow()
+  } else {
+    alert("Líder no encontrado");
+  }
 };
 
 
@@ -67,29 +86,42 @@ const createLeader = () => {
   handleShow();
 };
 
+const showProductClient = () =>{
+
+}
 
 
-const showProductClient = () => {
-  
-};
+const optionsTwelveLeaders = leaders.filter((leader) => leader.mainLeader).map((leader) => ({
+  value: leader._id,
+  name: leader.name,
+}));
 
 
   const columns = [
     { name: "Name", label: "Nombre"},
-    { name: "mainLeader", label: "LIDER DE 12", }
+    { name: "mainLeader", label: "LIDER DE 12", },
+    { name: "team", label: "Equipo", },
+    {name: "idMainLeader", label: "Lider"}
   ];
 
 
-  const visibleColumns = ["name","mainLeader"];
+  const visibleColumns = ["name", "mainLeader", "team", "idMainLeader"];
 
   const leaderOptions = [
     { value: true, name: "Líder de 12" },
     { value: false, name: "Líder 144" },
   ];
 
+  const teamOptions = [
+    { value: "Mujeres", name: "Mujeres" },
+    { value: "Hombres", name: "Hombres" },
+  ];
+
   const fields = [
     { name: "name", label: "Nombre", type: "text", placeholder: "Escribe el nombre", defaultValue: "" },
-    { name: "mainLeader", label: "Lider de 12", type: "select", options: leaderOptions, placeholder: "Escoge tipo de lider", defaultValue: "" },
+    { name: "team", label: "Equipo o Red", type: "select", placeholder: "Escoge la red", options: teamOptions, defaultValue: "" },
+    { name: "mainLeader", label: "Tipo de lider", type: "select", options: leaderOptions, placeholder: "Escoge tipo de lider", defaultValue: "" },
+    { name: "idMainLeader", label: "Lider Principal", type: "select", placeholder: "Escoge el lider principal", options: optionsTwelveLeaders, defaultValue: "Pastor" },
   ];
 
   return (

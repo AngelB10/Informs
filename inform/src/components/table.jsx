@@ -8,7 +8,7 @@ const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInf
         <h6 >{nameTable}</h6>
       </div>
       <div className="overflow-y-auto max-h-[500px] pb-8 pt-2  rounded-[10px]">
-  <table className="w-full border-collapse rounded-lg shadow-md bg-white text-center">
+  <table className="w-full border-collapse rounded-lg shadow-md bg-white ">
     <thead className="bg-gray-100 hover:bg-gray-300 border-b ">
       <tr>
         {columns.map((col) => (
@@ -24,8 +24,8 @@ const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInf
         <tr key={index} className="hover:bg-gray-100 transition border-b last:border-none">
           {visibleColumns.map((colKey) => (
             <td key={colKey} className="px-2 py-2 text-gray-700 truncate">
-              <div className={`${colKey === "mainLeader" || colKey === "date" ? "bg-green-300 text-[#09b717] rounded-[4px] text-center max-w-[138px]" : "bg-transparent"} px-2 py-2`}>
-                {typeof row[colKey] === "string" && row[colKey].length > 30 ? row[colKey].slice(0, 30) + "..." : row[colKey]}
+              <div className={`${colKey === "mainLeader" || colKey === "date" ? "bg-green-300 text-[#09b717] rounded-[4px] text-center max-w-[138px]" : "bg-transparent text-[85%]"} px-3 py-2`}>
+                {typeof row[colKey] === "string" && row[colKey].length > 18 ? row[colKey].slice(0, 18) + "..." : row[colKey].toLocaleString() }
               </div>
             </td>
           ))}

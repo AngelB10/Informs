@@ -1,11 +1,33 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types"; 
 import { useState, useEffect } from "react";
+import { useStoreLeaders } from "../store/useStoreLeader";
 
 const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaEdit }) => {
+  const {leaders} = useStoreLeaders();
   const [formData, setFormData] = useState({});
-
   const [errors, setErrors] = useState({});
+  const [filteredLeaders, setFilteredLeaders] = useState([]);
+
+  const handleLeaderChange = (e) => {
+  handleChange(e);
+  const { value } = e.target;
+  console.log(value, " value ");
+  
+  setFormData((prev) => ({ ...prev, idMainLeader: value }));
+
+  if (!value) {
+    setFilteredLeaders([]); // Si no hay selección, mostramos todos los líderes
+    return;
+  }
+
+  // Filtramos los líderes que tienen al líder de 12 como idMainLeader
+  const filtered = leaders.filter(
+    (leader) => leader.idMainLeader === value || leader._id === value
+  );
+  setFilteredLeaders(filtered);
+};
+
 
   // Cuando se abra el modal, actualizar formData con los datos del informe a editar
   useEffect(() => {
@@ -18,14 +40,40 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
     }
   }, [initialData, fields]);
 
+  // funcion para agregar los cambios a formData
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+    setFormData((prevData) => {
+      let updatedData = { ...prevData, [name]: value };
+  
+      if (name === "date" && value) {
+        const fecha = new Date(value + "T00:00:00"); 
+        console.log("Fecha ingresada:", fecha); 
+        updatedData.week = getMonthWeek(fecha);
+        console.log("Semana calculada:", updatedData.week); 
+      }
+
+      if (name === "leader") {
+        const selectedLeader = leaders.find((leader) => leader.id === value);
+        if (selectedLeader) {
+          updatedData.team = selectedLeader.team;
+        }
+      }
+  
+      return updatedData;
     });
-    setErrors({ ...errors, [e.target.name]: "" }); 
+  
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+  
+// funcion para saber que numero de semana es 
+  const getMonthWeek = (date) => {
+    const dayOfMonth = date.getDate();
+    return Math.ceil(dayOfMonth / 7); // Ajusta correctamente a semanas del mes (1-4)
   };
 
+
+  // funcion validacion del form
   const handleSubmit = () => {
     const newErrors = {};
 
@@ -38,9 +86,14 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
       return;
     }
-    if (creaEdit == true) {
+
+    console.log(formData);
+        if (creaEdit == true) {
       onSubmit(formData);
     }
     else{
@@ -56,39 +109,39 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
         <Modal.Title className="!text-[18px]">{initialData ? "EDITAR INFORME" : "CREAR INFORME"}</Modal.Title>
       </Modal.Header>
       <Modal.Body className="bg-white px-4 text-black max-h-[400px] overflow-y-auto">
-        <Form>
-          {fields.map((field) => (
-            <Form.Group key={field.name}>
-              <Form.Label className="mb-0 font-thin">{field.label}</Form.Label>
-              {field.type === "select" ? (
-                <Form.Select
-                  className="bg-white mb-3 h-10"
-                  name={field.name}
-                  value={formData[field.name] || ""}
-                  onChange={handleChange}
-                >
-                  <option value="">{field.placeholder}</option>
-                  {field.options?.map((option) => (
-                    <option key={option.value} value={option.name}>
-                      {option.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              ) : (
-                <Form.Control
-                  className="bg-white mb-3 h-10"
-                  type={field.type}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  value={formData[field.name] || ""}
-                  onChange={handleChange}
-                  isInvalid={!!errors[field.name]}
-                />
-              )}
-              {errors[field.name] && <Form.Text className="text-danger">{errors[field.name]}</Form.Text>}
-            </Form.Group>
-          ))}
-        </Form>
+      <Form>
+        {fields.map((field) => (
+          <Form.Group key={field.name}>
+            <Form.Label className="mb-0 font-thin">{field.label}</Form.Label>
+            {field.type === "select" ? (
+              <Form.Select
+                className="bg-white mb-3 h-10"
+                name={field.name}
+                value={formData[field.name] || ""}
+                onChange={field.name === "mainLeader" ? handleLeaderChange : handleChange}
+              >
+                <option value="">{field.placeholder}</option>
+                {(field.name === "leader" ? filteredLeaders : field.options)?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.name}
+                  </option>
+                ))}
+              </Form.Select>
+            ) : (
+              <Form.Control
+                className="bg-white mb-3 h-10"
+                type={field.type}
+                name={field.name}
+                placeholder={field.placeholder}
+                value={formData[field.name] || ""}
+                onChange={handleChange}
+                isInvalid={!!errors[field.name]}
+              />
+            )}
+            {errors[field.name] && <Form.Text className="text-danger">{errors[field.name]}</Form.Text>}
+          </Form.Group>
+        ))}
+      </Form>;
       </Modal.Body>
       <Modal.Footer className="bg-dark px-5">
         <Button variant="secondary" onClick={handleClose}>

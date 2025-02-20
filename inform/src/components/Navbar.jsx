@@ -10,12 +10,12 @@ function MyNavbar() {
 
 
   return (
-    <nav className="flex gap-6 px-[1%] font-stretch-condensed shadow-md ">
-      <div className="text-center mt-[4px]">
-        <img src={logo} alt="Logo" className="w-13 h-13" />
+    <nav className="flex gap-0 sm:gap-4 md:gap-6 lg:gap-8 px-[1%] font-stretch-condensed shadow-md ">
+      <div className="text-center mt-[8px] sm:mt-[4px] md:mt-[4px] lg:mt-[4px]">
+        <img src={logo} alt="Logo" className="w-11 sm:w-13 md:w-13 lg:w-13" />
       </div>     
       <div className="mt-[14px]">
-        <ul className="flex items-start p-0 gap-10 text-center text-[15px]">
+        <ul className="flex p-1 items-start sm:gap-2 md:gap-6 lg:gap-6 text-center text-[12px] sm:text-[12px] md:text-[15px] lg:text-[15px]">
           <li className="hover:border-l-2  hover:border-blue-500 ">
            <Link to="/" className={`${isActive("/")} flex gap-1 p-1`}>
               <LayoutDashboard className="p-[2px]" size={22} /> 

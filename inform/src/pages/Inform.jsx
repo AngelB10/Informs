@@ -25,14 +25,20 @@ const Inform = () => {
   };
 
   useEffect(() => {
-    const formattedRows = informes.map((informe) => ({
-      ...informe,
-      date: informe.date ? informe.date.split("T")[0] : "",
-    }));
+    const formattedRows = informes.map((informe) => {
+      let mainLeaderName = leaders.find((l) => l._id === informe.mainLeader)?.name || "No encontrado";  
+      return {
+        ...informe,
+        mainLeader: mainLeaderName,
+        date: informe.date ? informe.date.split("T")[0] : "",
+      };
+    });
+  
     setRows(formattedRows);
-    console.log(formattedRows);
-    
-  }, [informes]);
+  }, [informes, leaders]); // 🔹 Agregar 'leaders' en dependencias
+  
+
+
 
   const handleShow = () => setShow(true);
 
@@ -85,15 +91,17 @@ const Inform = () => {
     { name: "date", label: "FECHA" },
     { name: "offering", label: "OFRENDA" },
     { name: "newAttendees", label: "Nuevos" },
+    { name: "week", label: "SEMANA"},
   ];
 
-  const visibleColumns = ["theme", "mainLeader", "leader", "numberAttendees", "date", "offering", "newAttendees"];
+  const visibleColumns = [ "theme", "mainLeader", "leader", "numberAttendees", "date", "offering", "newAttendees", "week",];
 
   const fields = [
     { name: "theme", label: "Tema", type: "text", placeholder: "Escribe el tema", defaultValue: "" },
     { name: "mainLeader", label: "Lider de 12", type: "select", options: optionsTwelveLeaders, placeholder: "Escoge el nombre", defaultValue: "" },
     { name: "leader", label: "Lider", type: "select", options: leaders, placeholder: "Escoge el nombre", defaultValue: "" },
     { name: "numberAttendees", label: "Cantidad de asistentes", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
+    { name: "comment", label: "Comentario", type: "text", placeholder: "Escribe un comentario", defaultValue: "Sin comentarios" },
     { name: "newAttendees", label: "Cantidad de nuevos", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
     { name: "date", label: "Fecha", type: "date", defaultValue: "", addProduct: true },
     { name: "offering", label: "Ofrenda", type: "number", placeholder: "Escribe la cantidad", defaultValue: "" },
@@ -113,11 +121,11 @@ const Inform = () => {
         />
 
         <Button
-          className="d-flex align-items-center w-30 bg-blue-500"
+          className="d-flex align-items-center bg-blue-400"
           onClick={createInform} // Abre el modal
         >
-          <Plus size={20} className="me-2 text-blue-950" />
-          <strong className="text-blue-950">Agregar</strong> 
+          <Plus size={20} className="me-2 text-blue-800" />
+          <strong className="text-blue-800">Agregar</strong> 
         </Button>
       </div>
 
