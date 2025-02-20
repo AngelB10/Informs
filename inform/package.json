@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.0.6",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
+    "file-saver": "^2.0.5",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
@@ -21,7 +22,8 @@
     "react-toastify": "^11.0.3",
     "recharts": "^2.15.1",
     "sweetalert2": "^11.17.2",
-    "tailwindcss": "^4.0.6"
+    "tailwindcss": "^4.0.6",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
