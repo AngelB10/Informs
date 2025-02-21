@@ -22,10 +22,16 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
   }
 
   // Filtramos los líderes que tienen al líder de 12 como idMainLeader
-  const filtered = leaders.filter(
-    (leader) => leader.idMainLeader === value || leader._id === value
-  );
+  const filtered = leaders
+  .filter((leader) => leader.idMainLeader === value || leader._id === value)
+  .map((leader) => ({
+    value: leader._id,
+    name: leader.name,
+  }));
+
   setFilteredLeaders(filtered);
+
+
 };
 
 
@@ -141,7 +147,7 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
             {errors[field.name] && <Form.Text className="text-danger">{errors[field.name]}</Form.Text>}
           </Form.Group>
         ))}
-      </Form>;
+      </Form>
       </Modal.Body>
       <Modal.Footer className="bg-dark px-5">
         <Button variant="secondary" onClick={handleClose}>

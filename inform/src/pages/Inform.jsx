@@ -27,9 +27,11 @@ const Inform = () => {
   useEffect(() => {
     const formattedRows = informes.map((informe) => {
       let mainLeaderName = leaders.find((l) => l._id === informe.mainLeader)?.name || "No encontrado";  
+      let leader = leaders.find((i) => i._id === informe.leader )?.name || "No encontrado"
       return {
         ...informe,
         mainLeader: mainLeaderName,
+        leader: leader,
         date: informe.date ? informe.date.split("T")[0] : "",
       };
     });
@@ -57,8 +59,6 @@ const Inform = () => {
   };
 
   const goInfo = (client) => {
-    console.log(client);
-    
     setTypeFunc(2);
     setDataInform(client);
     setIdEdit(client._id);
@@ -83,11 +83,18 @@ const Inform = () => {
     name: leader.name,
   }));
 
+  const optionsLeaders = leaders.map((leader) => ({
+    value: leader._id,
+    name: leader.name,
+  }));
+
+  
+
   const columns = [
     { name: "theme", label: "TEMA"},
     { name: "mainLeader", label: "LIDER DE 12" },
     { name: "leader", label: "LIDER DE CELULA" },
-    { name: "numberAttendees", label: "CANTIDAD" },
+    { name: "numberAttendees", label: "ASISTENTES" },
     { name: "date", label: "FECHA" },
     { name: "offering", label: "OFRENDA" },
     { name: "newAttendees", label: "Nuevos" },
@@ -99,7 +106,7 @@ const Inform = () => {
   const fields = [
     { name: "theme", label: "Tema", type: "text", placeholder: "Escribe el tema", defaultValue: "" },
     { name: "mainLeader", label: "Lider de 12", type: "select", options: optionsTwelveLeaders, placeholder: "Escoge el nombre", defaultValue: "" },
-    { name: "leader", label: "Lider", type: "select", options: leaders, placeholder: "Escoge el nombre", defaultValue: "" },
+    { name: "leader", label: "Lider", type: "select", options: optionsLeaders, placeholder: "Escoge el nombre", defaultValue: "" },
     { name: "numberAttendees", label: "Cantidad de asistentes", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
     { name: "comment", label: "Comentario", type: "text", placeholder: "Escribe un comentario", defaultValue: "Sin comentarios" },
     { name: "newAttendees", label: "Cantidad de nuevos", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },

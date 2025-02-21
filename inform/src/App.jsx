@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="h-screen bg-[#fefcfc]"> 
       <MyNavbar className="h-8" />
-      <div className="px-[15px] sm:px-[2%] md:px-[4%] lg:px-[6%] mt-8 mb-40 w-full sm:w-full md:w-[90%] lg:w-[88%]"> 
+      <div className="px-[15px] sm:px-[2%] md:px-[4%] lg:px-[6%] mt-8 mb-40 w-full sm:w-full md:w-[90%] lg:w-[95%]"> 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Leaders" element={<Leaders />} /> 
