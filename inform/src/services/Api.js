@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4500/api";
+// const API_URL = "http://localhost:4500/api";
+const API_URL = "https://informsbackend.up.railway.app/api"
 
 // links para informes
 
