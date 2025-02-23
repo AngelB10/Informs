@@ -5,6 +5,7 @@ import Leaders from "./pages/Leaders";
 import MyNavbar from "./components/Navbar";
 import Inform from "./pages/Inform";
 import Statistics from "./pages/Statistics"
+import Prueba from "./pages/prueba"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/Leaders" element={<Leaders />} /> 
           <Route path="/Inform" element={<Inform />} />
           <Route path="/Statistics" element={<Statistics />} />
+          <Route path="/Prueba" element={<Prueba />} />
         </Routes>
       </div>
     </div>
