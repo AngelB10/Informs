@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchLeaders, addLeaders,  updateLeaders, deleteLeaders, searchLeader} from "../services/Api";
+import { fetchLeaders, addLeaders,  updateLeaders, deleteLeaders, searchLeader, filterTypeLeader, filterTypeGrid} from "../services/Api";
 
 export const useStoreLeaders = () => {
   const [leaders, setLeaders] = useState([]);
@@ -18,15 +18,6 @@ export const useStoreLeaders = () => {
     }
   };
 
-   // Obtener informacion busqueda(GET)
-    const fetchLeaderSearch = async (searchQuery) => {
-      try {
-        const data = await searchLeader(searchQuery); 
-        setLeaders(data); 
-      } catch (error) {
-        console.error("Error al obtener informacion de búsqueda:", error);
-      }
-    };
 
   // Agregar informacion lider (POST)
   const addNewLeader = async (newLeader) => {
@@ -58,6 +49,37 @@ export const useStoreLeaders = () => {
     }
   };
 
+
+   // Obtener informacion busqueda(GET)
+   const fetchLeaderSearch = async (searchQuery) => {
+    try {
+      const data = await searchLeader(searchQuery); 
+      setLeaders(data); 
+    } catch (error) {
+      console.error("Error al obtener informacion de búsqueda:", error);
+    }
+  };
+
+  // filtrar por tipo de lider
+  const filterLeadersByType = async (mainLeaderFilter) => {
+    try {
+      const data = await filterTypeLeader(mainLeaderFilter); // Llamada a la API con el filtro
+      setLeaders(data);
+    } catch (error) {
+      console.error("Error al filtrar líderes:", error);
+    }
+  };filterTypeGrid
+  
+    // filtrar por tipo de red
+    const filterByTypeGrid = async (typeGrid) => {
+      try {
+        const data = await filterTypeGrid(typeGrid); // Llamada a la API con el filtro
+        setLeaders(data);
+      } catch (error) {
+        console.error("Error al filtrar líderes:", error);
+      }
+    };
+
   // Cargar informes al inicio
   useEffect(() => {
     AllLeaders();
@@ -70,6 +92,8 @@ export const useStoreLeaders = () => {
     addNewLeader,
     updateExistingLeader,
     deleteExistingLeader,
-    fetchLeaderSearch
+    fetchLeaderSearch,
+    filterLeadersByType,
+    filterByTypeGrid
   };
 };

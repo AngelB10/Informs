@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Plus, RefreshCcw } from "lucide-react";
 import { Button } from "react-bootstrap";
 import DataTable from "../components/table";
 import ModalForm from "../components/Form";
@@ -9,7 +9,7 @@ import { sweetDelete } from "../services/notify";
 
 const Inform = () => {
   const [show, setShow] = useState(false);
-  const { informes, addNewInforme, deleteExistingInforme, updateExistingInforme, fetchInformesSearch } = useStoreInformes();
+  const { informes, addNewInforme, deleteExistingInforme, updateExistingInforme, fetchInformesSearch, AllInformes, fetchInformesDate } = useStoreInformes();
   const { leaders } = useStoreLeaders();
   const [rows, setRows] = useState([]); // Inicializar rows vacío
   const [dataInform, setDataInform] = useState();
@@ -17,6 +17,7 @@ const Inform = () => {
   const [idEdit, setIdEdit] = useState();
   const [typeFunc, setTypeFunc] = useState();
   const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
+  const [GetDate, setGetDate] = useState()
 
   // Maneja el cambio del input de búsqueda
   const handleSearchChange = (e) => {
@@ -98,6 +99,18 @@ const Inform = () => {
     name: leader.name,
   }));
 
+
+  // funcion filtrar informes por fecha
+  const handleFilterDate = (event) => {
+    const value = event.target.value;
+    setGetDate(value);
+  
+    if (value === "") {
+      AllInformes(); // Cargar todos los líderes
+    } else {
+      fetchInformesDate(value); // Filtrar según el tipo
+    }
+  };
   
 
   const columns = [
@@ -127,23 +140,48 @@ const Inform = () => {
   return (
     <div>
       <h3 className="text-black">Informes</h3>
-      <p>Pagina para agregar y eliminar informes</p>
-      <div className="d-flex justify-content-between mt-9">
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="w-[40%] border-[1px] border-[#cbcbcb] rounded-[6px] p-2"
-          value={searchQuery}
-          onChange={handleSearchChange} // Llama a la función de búsqueda
-        />
+      <p>Gestión de informacion de informes</p>
+      <div className="block sm:flex md:flex lg:flex items-center justify-between mt-10 p-1">
+      <div className="flex items-center gap-1 sm:gap-4 md:gap-4 lg:gap-4">
+      <div className="mb-3">
+      <label className="mb-1 block">Búsqueda</label>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        className="border border-gray-400 rounded p-2 w-full"
+        value={searchQuery}
+        onChange={handleSearchChange}
+      /> 
+      </div>
+    <div className="mb-3"> 
+    <label className="mb-1 block">Filtrar por fecha</label>
+      <input
+        type="date"
+        placeholder="Buscar..."
+        className="border border-gray-400 rounded p-2 w-full"
+        value={GetDate}
+        onChange={handleFilterDate}
+      />
+   
+    </div>
+    </div>
+    <div className="flex gap-2.5">
+      <Button
+          className="d-flex align-items-center !bg-green-400 h-10 !border-none"
+          onClick={AllInformes} // Abre el modal
+        >
+          <RefreshCcw size={20} className="me-1 text-green-600" />
+          <strong className="text-white"></strong> 
+        </Button>
 
         <Button
-          className="d-flex align-items-center bg-blue-400"
+          className="d-flex align-items-center bg-blue-400 h-10"
           onClick={createInform} // Abre el modal
         >
-          <Plus size={20} className="me-2 text-blue-800" />
-          <strong className="text-blue-800">Agregar</strong> 
+          <Plus size={20} className="me-1 text-white" />
+          <strong className="text-white">Agregar</strong> 
         </Button>
+    </div>
       </div>
 
       <div className="mt-3">
@@ -156,6 +194,9 @@ const Inform = () => {
           onGoInfo={goInfo}
           onProductClients={showProductClient}
         />
+           <div className="px-4 pt-4 pb-2 shadow-2xl ">
+          <p >CANTIDAD DE DATOS: <strong className="bg-amber-500 rounded-[4px] p-1"> {informes.length}</strong></p>
+        </div>
       </div>
 
       {/* Modal con formulario */}

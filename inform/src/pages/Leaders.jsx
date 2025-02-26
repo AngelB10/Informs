@@ -9,20 +9,44 @@ import { sweetDelete } from "../services/notify";
 
 const Leaders = () => {
   const [show, setShow] = useState(false);
-  const {leaders, addNewLeader, deleteExistingLeader, updateExistingLeader, fetchLeaderSearch } = useStoreLeaders();
+  const {leaders, addNewLeader, deleteExistingLeader, updateExistingLeader, fetchLeaderSearch, filterLeadersByType, filterByTypeGrid, AllLeaders } = useStoreLeaders();
   const [rows, setRows] = useState([]); // Inicializar rows vacío
   const [dataLeader, setDataLeader] = useState()
   const [actionType, setActionType] = useState()
   const [idEdit, setIdEdit] = useState()
   const [typeFunc, setTypeFunc] = useState()
-  const [searchQuery, setSearchQuery] = useState(""); // Estado para 
-
+  const [searchQuery, setSearchQuery] = useState("");  
+  const [typeLeader, setTypeLeader ] = useState()
 
   // Maneja el cambio del input de búsqueda
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value); 
     fetchLeaderSearch(e.target.value); 
   };
+
+  // filtro de tipo de lideres
+    const handleFilterChange = (event) => {
+      const value = event.target.value;
+      setTypeLeader(value);
+    
+      if (value === "") {
+        AllLeaders(); // Cargar todos los líderes
+      } else {
+        filterLeadersByType(value); // Filtrar según el tipo
+      }
+    };
+
+    const handleFilterGrid = (data) => {
+      const value = data.target.value;
+      setTypeLeader(value);
+    
+      if (value === "") {
+        AllLeaders(); // Cargar todos los líderes
+      } else {
+        filterByTypeGrid(value); // Filtrar según el tipo
+      }
+    }
+  
 
   useEffect(() => {
     const formattedRows = leaders.map((leader) => {
@@ -85,11 +109,9 @@ const createLeader = () => {
   setActionType(() => addNewLeader); 
   handleShow();
 };
-
 const showProductClient = () =>{
 
 }
-
 
 const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader).map(leader => ({
   value: leader._id,
@@ -125,29 +147,64 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
     { name: "idMainLeader", label: "Lider Principal", type: "select", placeholder: "Escoge el lider principal", options: optionsTwelveLeaders, defaultValue: "Pastor" },
   ];
 
+
   return (
     <div>
       <h3 className="text-black">Lideres</h3>
-      <p>Pagina para agregar y eliminar los lideres</p>
-      <div className="d-flex justify-content-between align-items-center mt-10">
+      <p>Gestión de información de lideres</p>
+      <div className="block sm:flex md:flex lg:flex  items-center justify-between mt-10 p-1">
+  {/* Contenedor izquierdo con input y select */}
+  <div className="flex items-center gap-1 sm:gap-4 md:gap-4 lg:gap-4">
+    <div className="mb-3">
+      <label className="mb-1 block">Búsqueda</label>
       <input
-          type="text"
-          placeholder="Buscar..."
-          className="w-[40%] border-[1px] border-[#cbcbcb] rounded-[6px] p-2"
-          value={searchQuery}
-          onChange={handleSearchChange} // Llama a la función de búsqueda
-        />
+        type="text"
+        placeholder="Buscar..."
+        className="border border-gray-400 rounded p-2 w-full"
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+    </div>
 
-        <Button
+    <div className="mb-3">
+      <label className="form-label block">Filtrar líder</label>
+      <select
+        className="border border-gray-400 rounded p-2 w-full"
+        value={typeLeader}
+        onChange={handleFilterChange}
+      >
+        <option value="">Todos</option>
+        <option value="true">Líder de 12</option>
+        <option value="false">Líder de 144</option>
+      </select>
+    </div>
+
+    <div className="mb-3">
+      <label className="form-label block">Filtrar Equipo</label>
+      <select
+        className="border border-gray-400 rounded p-2 w-full"
+        value={typeLeader}
+        onChange={handleFilterGrid}
+      >
+        <option value="">Todos</option>
+        <option value="Hombres">Hombres</option>
+        <option value="Mujeres">Mujeres</option>
+      </select>
+    </div>
+  </div>
+
+  {/* Botón alineado a la derecha */}
+  <Button
           className="d-flex align-items-center w-30 bg-blue-500 "
           onClick={createLeader} // Abre el modal
         >
-          <Plus size={20} className="me-2 text-blue-950" />
-          <strong className="text-blue-950">Agregar</strong> 
+          <Plus size={20} className="me-2 text-white-950" />
+          <strong className="text-white">Agregar</strong> 
         </Button>
       </div>
 
-      <div className="mt-3">
+
+      <div className="mt-2">
         <DataTable
           rows={rows}
           columns={columns}
@@ -157,6 +214,9 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
           onGoInfo={goInfo}
           onProductClients={showProductClient}
         />
+        <div className="px-4 pt-4 pb-2 shadow-2xl ">
+          <p >CANTIDAD DE DATOS: <strong className="bg-amber-500 rounded-[4px] p-1"> {leaders.length}</strong></p>
+        </div>
       </div>
 
       {/* Modal con formulario */}

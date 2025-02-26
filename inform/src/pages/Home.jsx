@@ -9,69 +9,43 @@ const {leaders } = useStoreLeaders();
 const today = new Date().toISOString().split("T")[0]; 
 
 // funcion para rangos semanales
-const getWeekRange = () => {
-  const now = new Date();
-  const firstDay = new Date(now.setDate(now.getDate() - now.getDay())); // Domingo
-  const lastDay = new Date(now.setDate(firstDay.getDate() + 6)); // Sábado
-
-  return {
-    start: firstDay.toISOString().split("T")[0], // Formato YYYY-MM-DD
-    end: lastDay.toISOString().split("T")[0]
-  };
-};
-
-// funcion para saber cantidad de informes entregados
-const filterCurrentWeekInforms = (informes) => {
-  const { start, end } = getWeekRange();
-  return informes.filter(informe => {
-    const date = new Date(informe.date).toISOString().split("T")[0];
-    return date >= start && date <= end;
-  });
-};
-
-const informesSemanaActual = filterCurrentWeekInforms(informes);
-
-// funcion suma ofrenda semanal 
-const sumOfferingWeek = (informes) => {
-  const { start, end } = getWeekRange();
-  
-  return informes
-    .filter(({ date }) => {
-      const reportDate = date.split("T")[0];
-
-      return reportDate >= start && reportDate <= end;
-    })
-    .reduce((total, { offering }) => total + offering, 0);
-};
-
-// suma de asistentes semanales
-const Attendees = (informes) => {
-  const { start, end } = getWeekRange();
-  
-  return informes
-    .filter(({ date }) => {
-      const reportDate = date.split("T")[0];
-
-      return reportDate >= start && reportDate <= end;
-    })
-    .reduce((total, { numberAttendees }) => total + numberAttendees, 0);
-};
-
-// suma de nuevos
-const filterNewAttendees = (informes) => {
-  const { start, end } = getWeekRange();
-  
-  return informes
-    .filter(({ date }) => {
-      const reportDate = date.split("T")[0];
-
-      return reportDate >= start && reportDate <= end;
-    })
-    .reduce((total, { newAttendees }) => total + newAttendees, 0);
-};
-
-
 const getMonthWeek = (value) => {
+  const fecha = new Date(value + "T00:00:00"); 
+  const dayOfMonth = fecha.getDate();  
+  return Math.ceil(dayOfMonth / 7); // Devuelve un número del 1 al 4
+};
+
+// Obtener la semana actual
+const getCurrentWeek = () => {
+  const today = new Date();
+  return getMonthWeek(today.toISOString().split("T")[0]); 
+};
+
+const filterCurrentWeekInforms = (informes) => {  
+  const currentWeek = getCurrentWeek();
+  return  informes.filter((informe) => informe.week == currentWeek);
+  
+  
+};
+
+const totalInformesSemana = filterCurrentWeekInforms(informes).length;
+
+
+const sumOfferingWeek = (informes) => {
+  return filterCurrentWeekInforms(informes).reduce((total, { offering }) => total + (offering || 0), 0);
+};
+
+// Obtener número total de asistentes de la semana actual
+const Attendees = (informes) => {
+  return filterCurrentWeekInforms(informes).reduce((total, { numberAttendees }) => total + (numberAttendees || 0), 0);
+};
+
+// Obtener número total de nuevos asistentes de la semana actual
+const filterNewAttendees = (informes) => {
+  return filterCurrentWeekInforms(informes).reduce((total, { newAttendees }) => total + (newAttendees || 0), 0);
+};
+
+const MonthWeek = (value) => {
 const fecha = new Date(value + "T00:00:00"); 
 const dayOfMonth = fecha.getDate();  
 return Math.ceil(dayOfMonth / 7); 
@@ -87,7 +61,7 @@ return Math.ceil(dayOfMonth / 7);
         <div>
           <h2 className="m-0"><strong>Dashboard</strong></h2>
           <p className="mb-5 p-0">Informacion semanal</p>
-          <h5><strong>Semana {getMonthWeek(today)}</strong> </h5>
+          <h5><strong>Semana {MonthWeek(today)}</strong> </h5>
         </div>
         <p className="float-right bg-blue-500 p-2 h-10 rounded-[6px] text-white">{today}</p>
       </div>
@@ -98,7 +72,7 @@ return Math.ceil(dayOfMonth / 7);
           <FileText className="mr-2 float-rigth" size={28} /> 
           <p className="text-[20px] flex md:text-[12px] lg:text-[20px] transition-all ">CANTIDAD DE INFORMES</p>
           </div>
-          <h2 className="font-bold ml-2">{informesSemanaActual.length} #</h2>
+          <h2 className="font-bold ml-2">{totalInformesSemana} #</h2>
         </Card>
         <Card className="p-2 !bg-[#7de113] shadow rounded-xl text-white">
           <div className="flex">

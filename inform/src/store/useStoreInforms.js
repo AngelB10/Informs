@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchInforms, searchInforms, addInform,  deleteInform, updateInform} from "../services/Api";
+import { fetchInforms, searchInforms, addInform,  deleteInform, updateInform, dateInforms} from "../services/Api";
 
 export const useStoreInformes = () => {
   const [informes, setInformes] = useState([]);
@@ -15,16 +15,6 @@ export const useStoreInformes = () => {
       console.error("Error al obtener informes", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Obtener informes busqueda(GET)
-  const fetchInformesSearch = async (searchQuery) => {
-    try {
-      const data = await searchInforms(searchQuery); 
-      setInformes(data); 
-    } catch (error) {
-      console.error("Error al obtener los informes de búsqueda:", error);
     }
   };
 
@@ -58,6 +48,27 @@ export const useStoreInformes = () => {
     }
   };
 
+  // Obtener informes busqueda(GET)
+  const fetchInformesSearch = async (searchQuery) => {
+    try {
+      const data = await searchInforms(searchQuery); 
+      setInformes(data); 
+    } catch (error) {
+      console.error("Error al obtener los informes de búsqueda:", error);
+    }
+  };
+
+  // Obtener informes por fecha(GET)
+  const fetchInformesDate = async (searchQuery) => {
+    try {
+      const data = await dateInforms(searchQuery); 
+      setInformes(data); 
+    } catch (error) {
+      console.error("Error al obtener los informes de búsqueda:", error);
+    }
+  };
+
+
   // Cargar informes al inicio
   useEffect(() => {
     AllInformes();
@@ -70,6 +81,7 @@ export const useStoreInformes = () => {
     addNewInforme,
     updateExistingInforme,
     deleteExistingInforme,
-    fetchInformesSearch
+    fetchInformesSearch,
+    fetchInformesDate
   };
 };

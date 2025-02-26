@@ -12,14 +12,6 @@ export const fetchInforms = async () => {
   return response.data;
 };
 
-// Obtener informes busqueda(GET)
-export const searchInforms = async (searchQuery) => {
-  const response = await axios.get(`${API_URL}/informs/search`, {
-    params: { searchQuery }  // Enviar como parámetro de consulta (query parameter)
-  });
-  return response.data;
-};
-
 // Agregar informe (POST)
 export const addInform = async (newInform) => {
   const response = await axios.post(`${API_URL}/informs`, newInform);
@@ -36,6 +28,23 @@ export const updateInform = async (id, dataUpdate) => {
 export const deleteInform = async (id) => {
   await axios.delete(`${API_URL}/informs/${id}`);
 };
+
+// Obtener informes busqueda(GET)
+export const searchInforms = async (searchQuery) => {
+  const response = await axios.get(`${API_URL}/informs/search`, {
+    params: { searchQuery }  // Enviar como parámetro de consulta (query parameter)
+  });
+  return response.data;
+};
+
+// Obtener informes por fecha(GET)
+export const dateInforms = async (date) => {
+  const response = await axios.get(`${API_URL}/informs/date`, {
+    params: { date }  // Enviar como parámetro de consulta (query parameter)
+  });
+  return response.data;
+};
+
 
 
 
@@ -72,4 +81,20 @@ export const updateLeaders = async (id, dataUpdate) => {
 // Eliminar informe (DELETE)
 export const deleteLeaders = async (id) => {
   await axios.delete(`${API_URL}/leader/${id}`);
+};
+
+// filtrar tipo de lider
+export const filterTypeLeader = async (searchQuery) => {
+  const response = await axios.get(`${API_URL}/leader/searchQuery`, {
+    params: { searchQuery }  
+  });
+  return response.data;
+};
+
+// filtrar tipo de red
+export const filterTypeGrid = async (searchQueryGrid) => {
+  const response = await axios.get(`${API_URL}/leader/searchQueryGrid`,{
+    params: { searchQueryGrid }  
+  });
+  return response.data;
 };

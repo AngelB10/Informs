@@ -3,7 +3,7 @@ import { Trash, Edit} from "lucide-react";
 
 const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInfo }) => {
   return (
-    <div className=" mt-10">
+    <div className=" mt-6">
       <div className="flex justify-between items-center">
         <h6 >{nameTable}</h6>
       </div>
