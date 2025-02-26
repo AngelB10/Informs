@@ -123,13 +123,31 @@ const Statistics = () => {
       <div className="mt-10 h-28 bg-dark rounded-[10px] w-[92%] text-white px-8 py-3">
        <h3>Resumen Mensual</h3>
        <div className="grid grid-cols-4 mt-3 gap-2">
-        <p className=" bg-orange-700 p-4 rounded-[10px]"><strong className="mr-4 ">Total de Informes:</strong>  <strong className="text-[10px] sm:text-[10px] md:text-[15px]">{monthlyData.totalReports}</strong></p>
-        <p className=" bg-orange-700 p-4 rounded-[10px]"><strong className="mr-4 ">Total Asistencia:</strong> <strong className="text-[10px] sm:text-[10px] md:text-[15px]">{monthlyData.totalAttendees}</strong></p>
-        <p className=" bg-orange-700 p-4 rounded-[10px]"><strong className="mr-4 ">Nuevos Asistentes:</strong> <strong className="text-[10px] sm:text-[10px] md:text-[15px]">{monthlyData.newAttendees}</strong></p>
-        <p className=" bg-orange-700 p-4 rounded-[10px]"><strong className="mr-4 ">Ofrendas:</strong> <strong className="text-[10px] sm:text-[10px] md:text-[15px]">{monthlyData.offering}</strong></p>
-       </div>
-       
-       <p></p>
+        <p className="bg-orange-700 p-4 rounded-[4px]">
+          <strong className="mr-4">Total de Informes:</strong>
+          <strong className="text-[10px] sm:text-[10px] md:text-[15px]">
+            {monthlyData?.totalReports ? monthlyData.totalReports.toLocaleString() : "0"}
+          </strong>
+        </p>
+        <p className="bg-orange-700 p-4 rounded-[4px]">
+          <strong className="mr-4">Total Asistencia:</strong>
+          <strong className="text-[10px] sm:text-[10px] md:text-[15px]">
+            {monthlyData?.totalAttendees ? monthlyData.totalAttendees.toLocaleString() : "0"}
+          </strong>
+        </p>
+        <p className="bg-orange-700 p-4 rounded-[4px]">
+          <strong className="mr-4">Nuevos Asistentes:</strong>
+          <strong className="text-[10px] sm:text-[10px] md:text-[15px]">
+            {monthlyData?.newAttendees ? monthlyData.newAttendees.toLocaleString() : "0"}
+          </strong>
+        </p>
+        <p className="bg-orange-700 p-4 rounded-[4px]">
+          <strong className="mr-4">Ofrendas:</strong>
+          <strong className="text-[10px] sm:text-[10px] md:text-[15px]">
+            {monthlyData?.offering ? monthlyData.offering.toLocaleString() : "0"}
+          </strong>
+        </p>
+      </div>
       </div>
     </div>
     </div>
@@ -231,7 +249,7 @@ const Statistics = () => {
         </div>
         </div>
 
-        <div className="flex flex-col gap-4 p-4 mt-15">
+        <div className="flex flex-col gap-4 p-4 mb-15 bg-gray-200 rounded-b-2xl">
        <h4>Descargar informacion Informes</h4>
       <label className="font-semibold">Selecciona un mes:</label>
       <input

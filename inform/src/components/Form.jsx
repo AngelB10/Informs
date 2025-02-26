@@ -11,16 +11,14 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
 
   const handleLeaderChange = (e) => {
   handleChange(e);
-  const { value } = e.target;
-  console.log(value, " value ");
   
+  const { value } = e.target;
   setFormData((prev) => ({ ...prev, idMainLeader: value }));
 
   if (!value) {
     setFilteredLeaders([]); // Si no hay selección, mostramos todos los líderes
     return;
   }
-
   // Filtramos los líderes que tienen al líder de 12 como idMainLeader
   const filtered = leaders
   .filter((leader) => leader.idMainLeader === value || leader._id === value)
@@ -30,21 +28,36 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
   }));
 
   setFilteredLeaders(filtered);
-
-
 };
+
 
 
   // Cuando se abra el modal, actualizar formData con los datos del informe a editar
   useEffect(() => {
     if (initialData) {
+      console.log(initialData);
+      
+      const value = initialData.idMainLeader
+      
+      const filtered = leaders
+      .filter((leader) => leader.idMainLeader === value || leader._id === value)
+      .map((leader) => ({
+        value: leader._id,
+        name: leader.name,
+      }));
+      setFilteredLeaders(filtered); 
+      initialData.leader = initialData.idLeader
       setFormData(initialData);
     } else {
-      setFormData(fields.reduce((acc, field) => ({ 
-        ...acc, [field.name]: field.defaultValue || "" 
-      }), {}));
+      setFormData(
+        fields.reduce((acc, field) => ({
+          ...acc,
+          [field.name]: field.defaultValue || "",
+        }), {})
+      );
     }
-  }, [initialData, fields]);
+  }, [initialData, fields, leaders]);
+  
 
   // funcion para agregar los cambios a formData
   const handleChange = (e) => {
@@ -99,8 +112,9 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
     }
 
     console.log(formData);
-        if (creaEdit == true) {
-      onSubmit(formData);
+    
+    if (creaEdit == true) {
+     onSubmit(formData);
     }
     else{
      onSubmit(id, formData); 
@@ -114,28 +128,28 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
       <Modal.Header closeButton className="bg-dark px-3 text-white w-100 ">
         <Modal.Title className="!text-[18px]">{initialData ? "EDITAR INFORME" : "CREAR INFORME"}</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="bg-white px-4 text-black max-h-[400px] overflow-y-auto">
+      <Modal.Body className="bg-white px-4 text-black max-h-[450px] overflow-y-auto ">
       <Form>
         {fields.map((field) => (
           <Form.Group key={field.name}>
             <Form.Label className="mb-0 font-thin">{field.label}</Form.Label>
-            {field.type === "select" ? (
+            {field.type === "select"  ? (
               <Form.Select
-                className="bg-white mb-3 h-10"
-                name={field.name}
-                value={formData[field.name] || ""}
-                onChange={field.name === "mainLeader" ? handleLeaderChange : handleChange}
-              >
-                <option value="">{field.placeholder}</option>
-                {(field.name === "leader" ? filteredLeaders : field.options)?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.name}
-                  </option>
-                ))}
-              </Form.Select>
+              className="bg-white mb-3 h-9 "
+              name={field.name}
+              value={formData[field.name] || ""}
+              onChange={field.name === "mainLeader" ? handleLeaderChange : handleChange}
+            >
+              <option value="">{field.placeholder}</option>
+              {(field.name === "leader" ? filteredLeaders : field.options)?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.name}
+                </option>
+              ))}
+            </Form.Select>
             ) : (
               <Form.Control
-                className="bg-white mb-3 h-10"
+                className="bg-white mb-3 h-9 "
                 type={field.type}
                 name={field.name}
                 placeholder={field.placeholder}
@@ -149,7 +163,7 @@ const ModalForm = ({ show, handleClose, fields, onSubmit, initialData, id, creaE
         ))}
       </Form>
       </Modal.Body>
-      <Modal.Footer className="bg-dark px-5">
+      <Modal.Footer className="px-5">
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>

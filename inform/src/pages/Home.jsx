@@ -28,6 +28,7 @@ const filterCurrentWeekInforms = (informes) => {
     return date >= start && date <= end;
   });
 };
+
 const informesSemanaActual = filterCurrentWeekInforms(informes);
 
 // funcion suma ofrenda semanal 
@@ -81,7 +82,7 @@ return Math.ceil(dayOfMonth / 7);
 
 
   return (
-    <div className="p-4 bg-gray-100 h-[700px]">
+    <div className="p-[2px] sm:p-4 md:p-4 bg-gray-100 h-[700px]">
       <div className="w-full d-flex justify-content-between text-gray-600">
         <div>
           <h2 className="m-0"><strong>Dashboard</strong></h2>
@@ -115,19 +116,19 @@ return Math.ceil(dayOfMonth / 7);
         </Card>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-      <Card className=" p-4 bg-white shadow rounded-xl">
+      <div className="grid grid-cols-2 gap-3">
+      <Card className="p-[2px] sm:p-4 md:p-4 bg-white shadow rounded-xl ">
           <div className="flex">
              <Banknote className="pr-[2px]" size={32} /> 
-             <h4 className="font-semibold mb-2">Ofrenda</h4>
+             <p className=" text-[17px] font-semibold mb-1 !mt-[2px] sm:mt-0 md:mt-0 lg:mt-0">Ofrenda</p>
           </div>
-          <h2 className="text-2xl font-bold">${sumOfferingWeek(informes).toLocaleString("es-CO")}</h2>
+          <p className="sm:text-[20px] text-[20px] font-bold">${sumOfferingWeek(informes).toLocaleString("es-CO")}</p>
           <div className="h-2 w-full bg-gray-300 rounded-full mt-2">
             <div className="h-2 bg-blue-600 w-1/2 rounded-full"></div>
           </div>
         </Card>
-        <Card className="p-4   bg-white shadow rounded-xl">
-          <h4 className="font-semibold mb-4">Lideres</h4>
+        <Card className="p-[2px] sm:p-4 md:p-4 bg-white shadow rounded-xl">
+          <h4 className="sm:text-[10px] text-[17px] font-semibold mb-4">Lideres</h4>
           <div className="space-x-8 mb-2">
             <div className="flex">
             <div className="h-10 content-center px-7 bg-pink-300 rounded-lg">{leaders.length}</div>

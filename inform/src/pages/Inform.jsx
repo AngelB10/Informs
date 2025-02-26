@@ -31,13 +31,15 @@ const Inform = () => {
       return {
         ...informe,
         mainLeader: mainLeaderName,
+        idMainLeader: informe.mainLeader,
         leader: leader,
+        idLeader: informe.leader,
         date: informe.date ? informe.date.split("T")[0] : "",
       };
     });
   
     setRows(formattedRows);
-  }, [informes, leaders]); // 🔹 Agregar 'leaders' en dependencias
+  }, [informes, leaders]); 
   
 
 
@@ -59,12 +61,20 @@ const Inform = () => {
   };
 
   const goInfo = (client) => {
+    console.log(client);
+    
     setTypeFunc(2);
-    setDataInform(client);
+    dataCorrect(client)
+  };
+
+  const dataCorrect = (client) => {
+    let newData = { ...client };
+    newData.mainLeader = newData.idMainLeader 
+    setDataInform(newData);
     setIdEdit(client._id);
     setActionType(() => updateExistingInforme); 
     handleShow();
-  };
+  }
 
   const createInform = () => {
     setTypeFunc(1);

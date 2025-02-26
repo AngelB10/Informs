@@ -6,11 +6,11 @@ function MyNavbar() {
   const location = useLocation(); // Obtiene la ruta actual
 
   // Función para verificar si la ruta está activa
-  const isActive = (path) => location.pathname === path ? "mb-0 rounded-[2px] text-[#0f0873] border-l-2 border-blue-500" : "border-none text-black";
+  const isActive = (path) => location.pathname === path ? "mb-0 rounded-[2px] text-[#0f0873] border-l-2 border-blue-500" : " text-black";
 
 
   return (
-    <nav className="flex gap-0 sm:gap-4 md:gap-6 lg:gap-8 px-[1%] font-stretch-condensed shadow-md ">
+    <nav className="flex gap-3 sm:gap-2 md:gap-6 lg:gap-8 px-[1%] font-stretch-condensed shadow-md ">
       <div className="text-center mt-[8px] sm:mt-[4px] md:mt-[4px] lg:mt-[4px]">
         <img src={logo} alt="Logo" className="w-11 sm:w-13 md:w-13 lg:w-13" />
       </div>     

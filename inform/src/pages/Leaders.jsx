@@ -31,7 +31,8 @@ const Leaders = () => {
       return {
         ...leader,
         mainLeader: leader.mainLeader ? "Líder de 12" : "Líder de 144",
-        idMainLeader: mainLeaderName, 
+        idMainLeader: mainLeaderName,
+        idMainLeaderValue: leader.idMainLeader
       };
     });
   
@@ -60,22 +61,21 @@ const deleteClient = async (data) => {
 const goInfo = (client) => {
   setTypeFunc(2)
   getNameById(client)
-  
   setIdEdit(client._id)
   setActionType(() => updateExistingLeader); 
   ;
 };
 
 const getNameById = (data) => {
-  const leader = leaders.find((leader) => leader._id === data.idMainLeader);
-
-  if (leader) {
-    data.idMainLeader = leader.name; 
-    setDataLeader(data);
-    handleShow()
-  } else {
-    alert("Líder no encontrado");
+  let newData = { ...data };
+  newData.mainLeader = newData.mainLeader === "Líder de 144 " ? false : true;
+  if (newData.idMainLeader !== "Pastor") {
+    const leaderFound = leaders.find((l) => l._id === newData.idMainLeaderValue);
+    newData.idMainLeader = leaderFound ? leaderFound._id : "No encontrado";
+    
   }
+  setDataLeader(newData);
+  handleShow();
 };
 
 
