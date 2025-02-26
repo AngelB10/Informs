@@ -91,10 +91,11 @@ const showProductClient = () =>{
 }
 
 
-const optionsTwelveLeaders = leaders.filter((leader) => leader.mainLeader).map((leader) => ({
+const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader).map(leader => ({
   value: leader._id,
   name: leader.name,
 }));
+
 
 
   const columns = [
