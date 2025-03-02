@@ -8,25 +8,35 @@ const { informes } = useStoreInformes();
 const {leaders } = useStoreLeaders();
 const today = new Date().toISOString().split("T")[0]; 
 
-// funcion para rangos semanales
 const getMonthWeek = (value) => {
-  const fecha = new Date(value + "T00:00:00"); 
-  const dayOfMonth = fecha.getDate();  
+  const fecha = new Date(value); // Se recibe un formato válido de fecha
+  const dayOfMonth = fecha.getUTCDate();  
   return Math.ceil(dayOfMonth / 7); // Devuelve un número del 1 al 4
 };
 
 // Obtener la semana actual
 const getCurrentWeek = () => {
   const today = new Date();
-  return getMonthWeek(today.toISOString().split("T")[0]); 
+  return getMonthWeek(today.toISOString()); 
 };
 
-const filterCurrentWeekInforms = (informes) => {  
-  const currentWeek = getCurrentWeek();
-  return  informes.filter((informe) => informe.week == currentWeek);
-  
-  
+// Obtener el mes actual
+const getCurrentMonth = () => {
+  return new Date().getUTCMonth() + 1; // Enero es 0, por eso sumamos 1
 };
+
+const filterCurrentWeekInforms = (informes) => { 
+  const currentWeek = getCurrentWeek();
+  const currentMonth = getCurrentMonth();
+  return informes.filter((informe) => {
+    const informeDate = new Date(informe.date); // Convertimos la fecha en objeto Date
+    const informeMonth = informeDate.getUTCMonth() + 1; // Obtener el mes en UTC
+    const informeWeek = getMonthWeek(informe.date); // Obtener la semana en UTC
+
+    return informeWeek === currentWeek && informeMonth === currentMonth;
+  });
+};
+
 
 const totalInformesSemana = filterCurrentWeekInforms(informes).length;
 

@@ -17,7 +17,7 @@ const Inform = () => {
   const [idEdit, setIdEdit] = useState();
   const [typeFunc, setTypeFunc] = useState();
   const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
-  const [GetDate, setGetDate] = useState()
+  const [GetDate, setGetDate] = useState("")
 
   // Maneja el cambio del input de búsqueda
   const handleSearchChange = (e) => {
