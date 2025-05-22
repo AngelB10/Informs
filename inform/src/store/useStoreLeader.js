@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchLeaders, addLeaders,  updateLeaders, deleteLeaders, searchLeader, filterTypeLeader, filterTypeGrid} from "../services/Api";
+import { fetchLeaders, addLeaders,  updateLeaders, deleteLeaders, searchLeader, filterTypeLeader, filterTypeGrid, filterTypeMinistry} from "../services/Api";
 
 export const useStoreLeaders = () => {
   const [leaders, setLeaders] = useState([]);
@@ -80,6 +80,15 @@ export const useStoreLeaders = () => {
       }
     };
 
+        const filterByMinistry = async (typeMinistry) => {
+      try {
+        const data = await filterTypeMinistry(typeMinistry); // Llamada a la API con el filtro
+        setLeaders(data);
+      } catch (error) {
+        console.error("Error al filtrar líderes:", error);
+      }
+    };
+
   // Cargar informes al inicio
   useEffect(() => {
     AllLeaders();
@@ -94,6 +103,7 @@ export const useStoreLeaders = () => {
     deleteExistingLeader,
     fetchLeaderSearch,
     filterLeadersByType,
-    filterByTypeGrid
+    filterByTypeGrid,
+    filterByMinistry
   };
 };

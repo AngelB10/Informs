@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { fetchInforms, searchInforms, addInform,  deleteInform, updateInform, dateInforms} from "../services/Api";
+import { fetchInforms, searchInforms, addInform,  deleteInform, updateInform, dateInforms, monthInforms} from "../services/Api";
 
 export const useStoreInformes = () => {
   const [informes, setInformes] = useState([]);
   const [loading, setLoading] = useState(false);
+
 
   // Obtener informes (GET)
   const AllInformes = async () => {
@@ -68,6 +69,16 @@ export const useStoreInformes = () => {
     }
   };
 
+    // Obtener informes por fecha(GET)
+    const fetchInformesMonth = async (searchQuery) => {
+      try {
+        const data = await monthInforms(searchQuery); 
+        setInformes(data); 
+      } catch (error) {
+        console.error("Error al obtener los informes de búsqueda:", error);
+      }
+    };
+
 
   // Cargar informes al inicio
   useEffect(() => {
@@ -82,6 +93,7 @@ export const useStoreInformes = () => {
     updateExistingInforme,
     deleteExistingInforme,
     fetchInformesSearch,
-    fetchInformesDate
+    fetchInformesDate,
+    fetchInformesMonth
   };
 };

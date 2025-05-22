@@ -9,7 +9,7 @@ import { sweetDelete } from "../services/notify";
 
 const Inform = () => {
   const [show, setShow] = useState(false);
-  const { informes, addNewInforme, deleteExistingInforme, updateExistingInforme, fetchInformesSearch, AllInformes, fetchInformesDate } = useStoreInformes();
+  const { informes, addNewInforme, deleteExistingInforme, updateExistingInforme, fetchInformesSearch, AllInformes, fetchInformesDate, fetchInformesMonth } = useStoreInformes();
   const { leaders } = useStoreLeaders();
   const [rows, setRows] = useState([]); // Inicializar rows vacío
   const [dataInform, setDataInform] = useState();
@@ -18,6 +18,7 @@ const Inform = () => {
   const [typeFunc, setTypeFunc] = useState();
   const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
   const [GetDate, setGetDate] = useState("")
+  const [GetMount, setGetMount] = useState("")
 
   // Maneja el cambio del input de búsqueda
   const handleSearchChange = (e) => {
@@ -27,6 +28,7 @@ const Inform = () => {
 
   useEffect(() => {
     const formattedRows = informes.map((informe) => {
+
       let mainLeaderName = leaders.find((l) => l._id === informe.mainLeader)?.name || "No encontrado";  
       let leader = leaders.find((i) => i._id === informe.leader )?.name || "No encontrado"
       return {
@@ -106,12 +108,23 @@ const Inform = () => {
     setGetDate(value);
   
     if (value === "") {
-      AllInformes(); // Cargar todos los líderes
+      AllInformes(); // Cargar todos los informes
     } else {
       fetchInformesDate(value); // Filtrar según el tipo
     }
   };
   
+
+  const handleFilterChange = (event) => {
+    const value = event.target.value
+    setGetMount(value)
+    
+    if (value === "") {
+      AllInformes(); // Cargar todos los informes
+    } else {
+      fetchInformesMonth(value); // Filtrar según el tipo
+    }
+  }
 
   const columns = [
     { name: "theme", label: "TEMA"},
@@ -135,6 +148,21 @@ const Inform = () => {
     { name: "newAttendees", label: "Cantidad de nuevos", type: "text", placeholder: "Escribe la Cantidad", defaultValue: "" },
     { name: "date", label: "Fecha", type: "date", defaultValue: "", addProduct: true },
     { name: "offering", label: "Ofrenda", type: "number", placeholder: "Escribe la cantidad", defaultValue: "" },
+  ];
+
+  const months = [
+    { value: 1, name: "Enero" },
+    { value: 2, name: "Febrero" },
+    { value: 3, name: "Marzo" },
+    { value: 4, name: "Abril" },
+    { value: 5, name: "Mayo" },
+    { value: 6, name: "Junio" },
+    { value: 7, name: "Julio" },
+    { value: 8, name: "Agosto" },
+    { value: 9, name: "Septiembre" },
+    { value: 10, name: "Octubre" },
+    { value: 11, name: "Noviembre" },
+    { value: 12, name: "Diciembre" },
   ];
 
   return (
@@ -163,6 +191,21 @@ const Inform = () => {
         onChange={handleFilterDate}
       />
    
+    </div>
+    <div className="mb-3"> 
+    <label className="mb-1 block">Filtrar por Mes</label>
+    <select
+      className="border border-gray-400 rounded p-2 w-full"
+      onChange={handleFilterChange}
+      value={GetMount}
+    >
+      <option value="">Todos</option>
+      {months.map((month) => (
+        <option key={month.value} value={month.value}>
+          {month.name}
+        </option>
+      ))}
+    </select>
     </div>
     </div>
     <div className="flex gap-2.5">

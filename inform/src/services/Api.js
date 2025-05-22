@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const API_URL = "http://localhost:4500/api";
-const API_URL = "https://informsbackend-production.up.railway.app/api";
+const API_URL = "https://informsbackend.onrender.com";
 
 
 // links para informes
@@ -41,6 +41,16 @@ export const searchInforms = async (searchQuery) => {
 export const dateInforms = async (date) => {
   const response = await axios.get(`${API_URL}/informs/date`, {
     params: { date }  // Enviar como parámetro de consulta (query parameter)
+  });
+  return response.data;
+};
+
+// Obtener informes por mes(GET)
+export const monthInforms = async (month) => {
+  console.log(month);
+  
+  const response = await axios.get(`${API_URL}/informs/month`, {
+    params: { month }  // Enviar como parámetro de consulta (query parameter)
   });
   return response.data;
 };
@@ -95,6 +105,15 @@ export const filterTypeLeader = async (searchQuery) => {
 export const filterTypeGrid = async (searchQueryGrid) => {
   const response = await axios.get(`${API_URL}/leader/searchQueryGrid`,{
     params: { searchQueryGrid }  
+  });
+  return response.data;
+};
+
+
+// filtrar tipo de ministerio
+export const filterTypeMinistry = async (searchQueryMinistry) => {
+  const response = await axios.get(`${API_URL}/leader/searchQueryMinistry`,{
+    params: { searchQueryMinistry }  
   });
   return response.data;
 };

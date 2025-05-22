@@ -26,8 +26,13 @@ const Statistics = () => {
       return infDate.getMonth() === currentMonth && infDate.getFullYear() === currentYear;
     });
 
+    console.log(filteredInformes);
+    
+
     const groupedData = [ 1, 2, 3, 4 ].map((week) => {
       const informesSemana = filteredInformes.filter((informe) => informe.week == week);
+      console.log(informesSemana);
+      
       return {
         week: `Semana ${week}`,
         totalReports: informesSemana.length,
@@ -35,7 +40,7 @@ const Statistics = () => {
         newAttendees: informesSemana.reduce((sum, inf) => sum + (inf.newAttendees || 0), 0),
         offering: informesSemana.reduce((sum, inf) => sum + (inf.offering || 0), 0),
       };
-    });
+    } ); 
     setWeeklyData(groupedData);
 
     setMonthlyData({
@@ -44,6 +49,10 @@ const Statistics = () => {
       newAttendees: filteredInformes.reduce((sum, inf) => sum + (inf.newAttendees || 0), 0),
       offering: filteredInformes.reduce((sum, inf) => sum + (inf.offering || 0), 0),
     });
+    console.log(monthlyData);
+    
+    console.log(filteredInformes, 2012);
+    
   }, [ informes, currentMonth, currentYear ]);
 
   const changeMonth = (direction) => {

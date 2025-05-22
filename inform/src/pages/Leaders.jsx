@@ -9,7 +9,7 @@ import { sweetDelete } from "../services/notify";
 
 const Leaders = () => {
   const [show, setShow] = useState(false);
-  const {leaders, addNewLeader, deleteExistingLeader, updateExistingLeader, fetchLeaderSearch, filterLeadersByType, filterByTypeGrid, AllLeaders } = useStoreLeaders();
+  const {leaders, addNewLeader, deleteExistingLeader, updateExistingLeader, fetchLeaderSearch, filterLeadersByType, filterByTypeGrid, filterByMinistry, AllLeaders } = useStoreLeaders();
   const [rows, setRows] = useState([]); // Inicializar rows vacío
   const [dataLeader, setDataLeader] = useState()
   const [actionType, setActionType] = useState()
@@ -17,7 +17,7 @@ const Leaders = () => {
   const [typeFunc, setTypeFunc] = useState()
   const [searchQuery, setSearchQuery] = useState("");  
   const [typeLeader, setTypeLeader ] = useState()
-
+   const [ministry, setMinistry] = useState()
   // Maneja el cambio del input de búsqueda
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value); 
@@ -37,13 +37,25 @@ const Leaders = () => {
     };
 
     const handleFilterGrid = (data) => {
-      const value = data.target.value;
+      const value = data.target.value;     
       setTypeLeader(value);
+      console.log(value);
+      
     
       if (value === "") {
         AllLeaders(); // Cargar todos los líderes
       } else {
         filterByTypeGrid(value); // Filtrar según el tipo
+      }
+    }
+
+       const handleMinistryFilter = (data) => {
+      const value = data.target.value;
+      setMinistry(value);
+      if (value === "") {
+        AllLeaders(); // Cargar todos los líderes
+      } else {
+        filterByMinistry(value); // Filtrar según el tipo
       }
     }
   
@@ -109,15 +121,12 @@ const createLeader = () => {
   setActionType(() => addNewLeader); 
   handleShow();
 };
-const showProductClient = () =>{
 
-}
 
 const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader).map(leader => ({
   value: leader._id,
   name: leader.name,
 }));
-
 
 
   const columns = [
@@ -152,9 +161,9 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
     <div>
       <h3 className="text-black">Lideres</h3>
       <p>Gestión de información de lideres</p>
-      <div className="block sm:flex md:flex lg:flex  items-center justify-between mt-10 p-1">
+      <div className="block sm:flex md:flex lg:flex  items-center justify-between mt-10 p-1 ">
   {/* Contenedor izquierdo con input y select */}
-  <div className="flex items-center gap-1 sm:gap-4 md:gap-4 lg:gap-4">
+  <div className="flex items-center gap-1 sm:gap-4 md:gap-4 lg:gap-4 w-[80%]">
     <div className="mb-3">
       <label className="mb-1 block">Búsqueda</label>
       <input
@@ -167,7 +176,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
     </div>
 
     <div className="mb-3">
-      <label className="form-label block">Filtrar líder</label>
+      <label className="form-label block">Filtrar tipo líder</label>
       <select
         className="border border-gray-400 rounded p-2 w-full"
         value={typeLeader}
@@ -191,6 +200,22 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
         <option value="Mujeres">Mujeres</option>
       </select>
     </div>
+
+     <div class="mb-3">
+      <label className="form-label block">Filtrar ministerio</label>
+      <select
+        className="border border-gray-400 rounded p-2 w-full"
+        value={typeLeader}
+        onChange={handleMinistryFilter}
+      >
+     <option value="">Todos</option>
+      {optionsTwelveLeaders.map((leader) => (
+        <option key={leader.value} value={leader.value}>
+          {leader.name}
+        </option>
+      ))}
+      </select>
+    </div>
   </div>
 
   {/* Botón alineado a la derecha */}
@@ -212,12 +237,13 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
           nameTable="Tabla de lideres"
           onDelete={deleteClient}
           onGoInfo={goInfo}
-          onProductClients={showProductClient}
         />
         <div className="px-4 pt-4 pb-2 shadow-2xl ">
           <p >CANTIDAD DE DATOS: <strong className="bg-amber-500 rounded-[4px] p-1"> {leaders.length}</strong></p>
         </div>
       </div>
+
+
 
       {/* Modal con formulario */}
       <ModalForm show={show}  handleClose={() => setShow(false)} fields={fields} id={idEdit} creaEdit={typeFunc} onSubmit={actionType} initialData={dataLeader} />
