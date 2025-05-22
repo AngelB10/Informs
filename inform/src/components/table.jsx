@@ -52,7 +52,6 @@ const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInf
     </div>
   );
 };
-
 // ✅ Agregar validación de props
 DataTable.propTypes = {
   rows: PropTypes.arrayOf(
@@ -73,6 +72,11 @@ DataTable.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onGoInfo: PropTypes.func.isRequired,
   onProductClients: PropTypes.func.isRequired,
+  
 };
+
+
+
+
 
 export default DataTable;

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const API_URL = "http://localhost:4500/api";
-const API_URL = "https://informsbackend.onrender.com";
+const API_URL = "https://informsbackend.onrender.com/api";
 
 
 // links para informes
@@ -47,8 +47,6 @@ export const dateInforms = async (date) => {
 
 // Obtener informes por mes(GET)
 export const monthInforms = async (month) => {
-  console.log(month);
-  
   const response = await axios.get(`${API_URL}/informs/month`, {
     params: { month }  // Enviar como parámetro de consulta (query parameter)
   });

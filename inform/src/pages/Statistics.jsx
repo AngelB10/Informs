@@ -18,48 +18,43 @@ const Statistics = () => {
   const [ monthlyData, setMonthlyData ] = useState([])
   const [ currentMonth, setCurrentMonth ] = useState(new Date().getMonth());
   const [ currentYear, setCurrentYear ] = useState(new Date().getFullYear());
+  const [ministry, setMinistry] = useState()
 
-
-  useEffect(() => {
-    const filteredInformes = informes.filter((inf) => {
-      const infDate = new Date(inf.date);
-      return infDate.getMonth() === currentMonth && infDate.getFullYear() === currentYear;
-    });
-
+useEffect(() => {
+  const filteredInformes = informes.filter((inf) => {    
+    return inf.date.slice(6, 7) - 1 == currentMonth && inf.date.slice(0, 4) == currentYear;
+  });
     console.log(filteredInformes);
     
 
-    const groupedData = [ 1, 2, 3, 4 ].map((week) => {
-      const informesSemana = filteredInformes.filter((informe) => informe.week == week);
-      console.log(informesSemana);
-      
-      return {
-        week: `Semana ${week}`,
-        totalReports: informesSemana.length,
-        totalAttendees: informesSemana.reduce((sum, inf) => sum + (inf.numberAttendees || 0), 0),
-        newAttendees: informesSemana.reduce((sum, inf) => sum + (inf.newAttendees || 0), 0),
-        offering: informesSemana.reduce((sum, inf) => sum + (inf.offering || 0), 0),
-      };
-    } ); 
-    setWeeklyData(groupedData);
-
-    setMonthlyData({
-      totalReports: filteredInformes.length,
-      totalAttendees: filteredInformes.reduce((sum, inf) => sum + (inf.numberAttendees || 0), 0),
-      newAttendees: filteredInformes.reduce((sum, inf) => sum + (inf.newAttendees || 0), 0),
-      offering: filteredInformes.reduce((sum, inf) => sum + (inf.offering || 0), 0),
-    });
-    console.log(monthlyData);
+  const groupedData = [1, 2, 3, 4].map((week) => {    
+  const informesSemana = filteredInformes.filter((informe) => informe.week == week);
+    console.log(informesSemana);
     
-    console.log(filteredInformes, 2012);
     
-  }, [ informes, currentMonth, currentYear ]);
 
-  const changeMonth = (direction) => {
-    console.log(direction);
+    return {
+      week: `Semana ${week}`,
+      totalReports: informesSemana.length,
+      totalAttendees: informesSemana.reduce((sum, inf) => sum + (inf.numberAttendees || 0), 0),
+      newAttendees: informesSemana.reduce((sum, inf) => sum + (inf.newAttendees || 0), 0),
+      offering: informesSemana.reduce((sum, inf) => sum + (inf.offering || 0), 0),
+    };
+  });
 
-    let newMonth = currentMonth + direction;
-    let newYear = currentYear;
+  setWeeklyData(groupedData);
+
+  setMonthlyData({
+    totalReports: filteredInformes.length,
+    totalAttendees: filteredInformes.reduce((sum, inf) => sum + (inf.numberAttendees || 0), 0),
+    newAttendees: filteredInformes.reduce((sum, inf) => sum + (inf.newAttendees || 0), 0),
+    offering: filteredInformes.reduce((sum, inf) => sum + (inf.offering || 0), 0),
+  });
+}, [informes, currentMonth, currentYear]);
+
+const changeMonth = (direction) => {
+  let newMonth = currentMonth + direction;
+  let newYear = currentYear;
 
     if (newMonth < 0) {
       newMonth = 11;
@@ -68,16 +63,30 @@ const Statistics = () => {
       newMonth = 0;
       newYear += 1;
     }
-    console.log(newMonth);
 
 
-    setCurrentMonth(newMonth);
-    setCurrentYear(newYear);
-  };
+  setCurrentMonth(newMonth);
+  setCurrentYear(newYear);
+};
+
+
+    const handleMinistryFilter = (data) => {
+      const value = data.target.value;
+      console.log(value);
+      setMinistry(value)
+      // if (value === "") {
+      //   AllLeaders(); // Cargar todos los líderes
+      // } else {
+      //   filterByMinistry(value); // Filtrar según el tipo
+      // }
+    }
 
   const monthNames = [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ];
 
-
+  const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader).map(leader => ({
+  value: leader._id,
+  name: leader.name,
+}));
 
 
 
@@ -211,6 +220,25 @@ const Statistics = () => {
           </div>
         </div>
       </div>
+
+       <div className="bg-gray-200 p-4 mb-2 rounded-2xl">
+         <h4>Informacion por ministerio </h4>
+        <div class="mb-3">
+       <label className="form-label block">Filtrar ministerio</label><br />
+        <select
+          className="border border-gray-400 rounded p-2 w-[40%] bg-white"
+          value={ministry}
+          onChange={handleMinistryFilter}
+        >
+      <option value="">Todos</option>
+        {optionsTwelveLeaders.map((leader) => (
+          <option key={leader.value} value={leader.value}>
+            {leader.name}
+          </option>
+        ))}
+        </select>
+    </div>
+       </div>
 
       <div className="bg-gray-200 p-4 mb-2">
         <h4>Top líderes con más asistencia total y nuevos asistentes</h4>

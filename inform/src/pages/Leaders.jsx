@@ -137,7 +137,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
   ];
 
 
-  const visibleColumns = ["name", "mainLeader", "team", "idMainLeader"];
+  const visibleColumns = [ "name", "mainLeader", "team", "idMainLeader"];
 
   const leaderOptions = [
     { value: true, name: "Líder de 12" },
@@ -205,7 +205,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
       <label className="form-label block">Filtrar ministerio</label>
       <select
         className="border border-gray-400 rounded p-2 w-full"
-        value={typeLeader}
+        value={ministry}
         onChange={handleMinistryFilter}
       >
      <option value="">Todos</option>

@@ -40,7 +40,6 @@ const Inform = () => {
         date: informe.date ? informe.date.split("T")[0] : "",
       };
     });
-  
     setRows(formattedRows);
   }, [informes, leaders]); 
   
@@ -106,6 +105,8 @@ const Inform = () => {
   const handleFilterDate = (event) => {
     const value = event.target.value;
     setGetDate(value);
+    console.log(value);
+    
   
     if (value === "") {
       AllInformes(); // Cargar todos los informes
