@@ -163,7 +163,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
       <p>Gestión de información de lideres</p>
       <div className="block sm:flex md:flex lg:flex  items-center justify-between mt-10 p-1 ">
   {/* Contenedor izquierdo con input y select */}
-  <div className="flex items-center gap-1 sm:gap-4 md:gap-4 lg:gap-4 w-[80%]">
+  <div className="flex items-center gap-1 sm:gap-2 md:gap-4 lg:gap-4 w-[100%] sm:w-full md:w-[90%] lg:w-[90%] text-[12px] sm:text-2">
     <div className="mb-3">
       <label className="mb-1 block">Búsqueda</label>
       <input
@@ -176,7 +176,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
     </div>
 
     <div className="mb-3">
-      <label className="form-label block">Filtrar tipo líder</label>
+      <label className="form-label block">líder</label>
       <select
         className="border border-gray-400 rounded p-2 w-full"
         value={typeLeader}
@@ -189,7 +189,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
     </div>
 
     <div className="mb-3">
-      <label className="form-label block">Filtrar Equipo</label>
+      <label className="form-label block">Equipo</label>
       <select
         className="border border-gray-400 rounded p-2 w-full"
         value={typeLeader}
@@ -202,7 +202,7 @@ const optionsTwelveLeaders = (leaders || []).filter(leader => leader.mainLeader)
     </div>
 
      <div class="mb-3">
-      <label className="form-label block">Filtrar ministerio</label>
+      <label className="form-label block">Ministerio</label>
       <select
         className="border border-gray-400 rounded p-2 w-full"
         value={ministry}
