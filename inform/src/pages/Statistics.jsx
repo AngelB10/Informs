@@ -19,17 +19,18 @@ const Statistics = () => {
   const [ currentMonth, setCurrentMonth ] = useState(new Date().getMonth());
   const [ currentYear, setCurrentYear ] = useState(new Date().getFullYear());
   const [ministry, setMinistry] = useState()
+  const [leaderMinistery, setLeaderMinistery] = useState()
+  const [dataMinisteryTable, setDataMinisteryTable] = useState([])
 
 useEffect(() => {
   const filteredInformes = informes.filter((inf) => {    
     return inf.date.slice(6, 7) - 1 == currentMonth && inf.date.slice(0, 4) == currentYear;
   });
-    console.log(filteredInformes);
+
     
 
   const groupedData = [1, 2, 3, 4].map((week) => {    
   const informesSemana = filteredInformes.filter((informe) => informe.week == week);
-    console.log(informesSemana);
     
     
 
@@ -70,16 +71,69 @@ const changeMonth = (direction) => {
 };
 
 
-    const handleMinistryFilter = (data) => {
-      const value = data.target.value;
-      console.log(value);
-      setMinistry(value)
-      // if (value === "") {
-      //   AllLeaders(); // Cargar todos los líderes
-      // } else {
-      //   filterByMinistry(value); // Filtrar según el tipo
-      // }
-    }
+const handleMinistryFilter = (e) => {
+  const selectedLeaderId = e.target.value;
+  setMinistry(selectedLeaderId); // o como lo llames en tu estado
+
+    const getNameLeaderTwelve = (leaders || []).filter(leader => leader._id == selectedLeaderId).map(leader => ( leader.name));
+
+    setLeaderMinistery(getNameLeaderTwelve)
+
+
+
+  // Filtrar líderes que están debajo de ese líder
+const allRelevantLeaders = (leaders || []).filter(
+  leader =>
+    leader._id === selectedLeaderId || // El principal
+    leader.idMainLeader === selectedLeaderId // Sus líderes debajo
+);
+  console.log(allRelevantLeaders);
+  
+  getInformLeaderMinistery(allRelevantLeaders)
+};
+
+const getInformLeaderMinistery = (leadersData) => {
+  const leaderIds = leadersData.map(leader => leader._id);
+
+  // Filtrar informes por mes y líderes
+  const filteredReports = (informes || []).filter(informe => {
+    const date = new Date(informe.date);
+    const month = date.getMonth();  
+    
+    return leaderIds.includes(informe.leader) && month === currentMonth;
+  });
+
+
+  // Crear estructura de tabla: por líder y semana
+  const tableData = leadersData.map(leader => {
+    // Filtrar informes solo de este líder
+    const leaderReports = filteredReports.filter(rep => rep.leader === leader._id);
+
+    // Crear estructura por semana
+    const weeks = [1, 2, 3, 4].map(weekNumber => {
+      const report = leaderReports.find(r => r.week === String(weekNumber));
+      return {
+        week: weekNumber,
+        didCell: !!report,
+        numberAttendees: report?.numberAttendees || 0,
+        newAttendees: report?.newAttendees || 0,
+        offering: report?.offering || 0,
+      };
+    });
+
+    return {
+      leaderName: leader.name,
+      leaderId: leader._id,
+      weeks, // semanas 1 a 4 con la info
+    };
+  });
+
+  console.log("Tabla lista para renderizar:", tableData);
+  setDataMinisteryTable(tableData)
+  // Aquí puedes guardar esto en el estado para renderizar una tabla
+};
+
+
 
   const monthNames = [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ];
 
@@ -238,6 +292,53 @@ const changeMonth = (direction) => {
         ))}
         </select>
     </div>
+   {ministry?.trim() && (
+      <div class="mt-5 mb-3" >
+        <h5>Informacion del Ministerio de {leaderMinistery}</h5> <br />
+        <table className="w-full">
+  <thead>
+    <tr>
+      <th className="text-center bg-black text-white">Líder</th>
+      <th className="text-center bg-black text-white">Semana 1</th>
+      <th className="text-center bg-black text-white">Semana 2</th>
+      <th className="text-center bg-black text-white">Semana 3</th>
+      <th className="text-center bg-black text-white">Semana 4</th>
+    </tr>
+  </thead>
+  <tbody className="bg-[#2c2c2c] text-white">
+    {Array.isArray(dataMinisteryTable) && dataMinisteryTable.length > 0 ? (
+      dataMinisteryTable.map(lider => (
+        <tr key={lider.leaderId}>
+          <td className="pb-2 pr-8 text-center">{lider.leaderName.slice(0, 15) + "..."}</td>
+          {Array.isArray(lider.weeks)
+            ? lider.weeks.map(semana => (
+                <td className="pb-2 text-center" key={semana.week}>
+                  {semana.didCell ? (
+                    <div>
+                      <div><strong>Asist:</strong> {semana.numberAttendees}</div>
+                      <div><strong>Nuev:</strong> {semana.newAttendees}</div>
+                      <div><strong>Ofr:</strong> ${semana.offering}</div>
+                    </div>
+                  ) : (
+                    <span className="text-gray-500" >Sin informe</span>
+                  )}
+                </td>
+              ))
+            : <td colSpan={4}>Sin semanas</td>}
+        </tr>
+      ))
+    ) : (
+      <tr>
+        <td colSpan={5}>No hay datos disponibles</td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
+
+
+      </div>
+)}
        </div>
 
       <div className="bg-gray-200 p-4 mb-2">
