@@ -200,21 +200,45 @@ const getInformLeaderMinistery = (leadersData) => {
 
 
   // funcion para descargar excel
-  const exportMonthlyData = () => {
+const exportMonthlyData = () => {
     if (!selectedMonth) {
       alert("Por favor, selecciona un mes.");
       return;
     }
 
-    const monthNumber = parseInt(selectedMonth.split("-")[ 1 ]); // Extraer el número de mes (1-12)
+    const [year, month] = selectedMonth.split("-");
+    const monthNumber = parseInt(month);
+    const yearNumber = parseInt(year);
 
     const filteredInformes = informes
-      .filter((inf) => new Date(inf.date).getMonth() + 1 === monthNumber)
-      .map((inf) => ({
-        ...inf,
-        mainLeader: leaders.find((l) => l._id === inf.mainLeader)?.name || "No encontrado",
-      }));
-    exportToExcel(filteredInformes, `Informes_Mes_${monthNumber}`);
+      .filter((inf) => {
+        const infDate = new Date(inf.date);
+        return (infDate.getMonth() + 1 === monthNumber) && (infDate.getFullYear() === yearNumber);
+      })
+      .map((inf) => {
+        const mainL = leaders.find((l) => l._id === inf.mainLeader);
+        const lead = leaders.find((l) => l._id === inf.leader);
+
+        // Al crear este objeto nuevo, quitamos automáticamente _id y __v
+        return {
+          "Tema": inf.theme,
+          "Líder de 12": mainL ? mainL.name : "No encontrado",
+          "Líder": lead ? lead.name : "No encontrado",
+          "Asistentes": inf.numberAttendees,
+          "Nuevos": inf.newAttendees,
+          "Semana": inf.week,
+          "Fecha": inf.date ? inf.date.split("T")[0] : "",
+          "Ofrenda": inf.offering,
+          "Comentario": inf.comment || "Sin comentario"
+        };
+      });
+
+    if (filteredInformes.length === 0) {
+      alert("No hay datos para este periodo.");
+      return;
+    }
+
+    exportToExcel(filteredInformes, `Informes_${monthNames[monthNumber - 1]}_${yearNumber}`);
   };
 
   return (
@@ -277,7 +301,7 @@ const getInformLeaderMinistery = (leadersData) => {
 
        <div className="bg-gray-200 p-4 mb-2 rounded-2xl">
          <h4>Informacion por ministerio </h4>
-        <div class="mb-3">
+        <div className="mt-4">
        <label className="form-label block">Filtrar ministerio</label><br />
         <select
           className="border border-gray-400 rounded p-2 w-[40%] bg-white"
@@ -293,7 +317,7 @@ const getInformLeaderMinistery = (leadersData) => {
         </select>
     </div>
    {ministry?.trim() && (
-      <div class="mt-5 mb-3" >
+      <div className="mt-4 overflow-x-auto">
         <h5>Informacion del Ministerio de {leaderMinistery}</h5> <br />
         <table className="w-full">
   <thead>

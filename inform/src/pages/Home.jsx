@@ -45,6 +45,8 @@ const sumOfferingWeek = (informes) => {
   return filterCurrentWeekInforms(informes).reduce((total, { offering }) => total + (offering || 0), 0);
 };
 
+
+
 // Obtener número total de asistentes de la semana actual
 const Attendees = (informes) => {
   return filterCurrentWeekInforms(informes).reduce((total, { numberAttendees }) => total + (numberAttendees || 0), 0);

@@ -16,7 +16,7 @@ const DataTable = ({ rows, columns, visibleColumns, nameTable, onDelete, onGoInf
             {col.label}
           </th>
         ))}
-        <th className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">Acciones</th>
+        <th  className="px-4 py-3 text-gray-600 font-semibold uppercase text-sm">Acciones</th>
       </tr>    
     </thead>
     <tbody>

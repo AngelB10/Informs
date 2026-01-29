@@ -7,6 +7,25 @@ import { useStoreInformes } from "../store/useStoreInforms";
 import { useStoreLeaders } from "../store/useStoreLeader";
 import { sweetDelete } from "../services/notify"; 
 
+const formatInformesData = (informesRaw, leadersList) => {
+  if (!leadersList || leadersList.length === 0) return [];
+
+  return informesRaw.map((informe) => {
+    const mainL = leadersList.find((l) => l._id === informe.mainLeader);
+    const lead = leadersList.find((l) => l._id === informe.leader);
+
+    return {
+      ...informe,
+      // Usamos los mismos nombres de propiedad que tus columnas ('mainLeader' y 'leader')
+      mainLeader: mainL ? mainL.name : "No encontrado",
+      idMainLeader: informe.mainLeader, // Guardamos el ID por si lo necesitas para editar
+      leader: lead ? lead.name : "No encontrado",
+      idLeader: informe.leader,
+      date: informe.date ? informe.date.split("T")[0] : "",
+    };
+  });
+};
+
 const Inform = () => {
   const [show, setShow] = useState(false);
   const { informes, addNewInforme, deleteExistingInforme, updateExistingInforme, fetchInformesSearch, AllInformes, fetchInformesDate, fetchInformesMonth } = useStoreInformes();
@@ -26,22 +45,13 @@ const Inform = () => {
     fetchInformesSearch(e.target.value); 
   };
 
-  useEffect(() => {
-    const formattedRows = informes.map((informe) => {
-
-      let mainLeaderName = leaders.find((l) => l._id === informe.mainLeader)?.name || "No encontrado";  
-      let leader = leaders.find((i) => i._id === informe.leader )?.name || "No encontrado"
-      return {
-        ...informe,
-        mainLeader: mainLeaderName,
-        idMainLeader: informe.mainLeader,
-        leader: leader,
-        idLeader: informe.leader,
-        date: informe.date ? informe.date.split("T")[0] : "",
-      };
-    });
-    setRows(formattedRows);
-  }, [informes, leaders]); 
+useEffect(() => {
+  // Verificamos que tengamos datos para evitar el "No encontrado" preventivo
+  if (informes && leaders.length > 0) {
+    const formatted = formatInformesData(informes, leaders);
+    setRows(formatted);
+  }
+}, [informes, leaders]);
   
 
 
